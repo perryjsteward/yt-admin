@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "yellowtail-admin": {
+      "type": "http",
+      "url": "https://www.yellowtail.club/api/mcp/admin"
+    }
+  }
+}

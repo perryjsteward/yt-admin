@@ -1,0 +1,16 @@
+{
+  "name": "yellowtail-admin",
+  "owner": {
+    "name": "Yellowtail"
+  },
+  "metadata": {
+    "description": "Yellowtail Admin, the Yellowtail team's desk plugin for the admin MCP connector: fulfil customers' orders, invite founders, file signals from event notes and announced deals, and keep the investor catalog clean. Platform admins only; customers use yt (Yellowtail Club)."
+  },
+  "plugins": [
+    {
+      "name": "yt-admin",
+      "source": "./",
+      "description": "Yellowtail Admin, the Yellowtail team's desk plugin for the admin MCP connector: fulfil customers' orders, invite founders, file signals from event notes and announced deals, and keep the investor catalog clean. Platform admins only; customers use yt (Yellowtail Club)."
+    }
+  ]
+}
