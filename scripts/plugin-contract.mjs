@@ -7,7 +7,7 @@ export const root = dirname(dirname(fileURLToPath(import.meta.url)));
 export const readJson = path => JSON.parse(readFileSync(join(root, path), 'utf8'));
 export const manifest = readJson('.claude-plugin/plugin.json');
 export const skills = readdirSync(join(root, 'skills')).filter(name => statSync(join(root, 'skills', name)).isDirectory());
-export const toolVerb = /^(whoami|about|list|get|search|create|update|delete|remove|add|set|file|capture|comment|import|invite|revoke|merge|export|find|verify|domain|show)_[a-z_]+$/;
+export const toolVerb = /^(whoami|about|list|get|search|create|update|delete|remove|add|set|file|capture|comment|import|invite|revoke|merge|export|find|verify|domain|show|enrich|publish|send|resend)_[a-z_]+$/;
 export const external = new Set(readJson('tests/external-tools.json'));
 export function markdownFiles(dir) {
   return readdirSync(dir).flatMap(name => {

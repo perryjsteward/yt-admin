@@ -58,7 +58,18 @@ catalog grows with every search, it files each new investor firm its shortlist k
 card: the firm only (no people, no new tags), only when the `file_investor` dry run passes with no
 duplicates, and with a profile note whose first line is `Auto-filed by /find-investors, unreviewed`,
 which is how the desk finds them to check (`/yt-admin:catalog-hygiene`). Its header
-says how many it filed. No other skill files without a card.
+says how many it filed.
+
+**The desk's scheduled research is the fourth** (Perry, 4 Nov 2026). Run with `--unattended` on a
+schedule, `/yt-admin:prospecting`, `/yt-admin:lead-enrichment` and `/yt-admin:signal-scan` write
+without a card, because nobody is there to approve one: new investor firms and their people, only on
+a clean `file_investor` dry run, with existing tags, and a profile note whose first line is
+`Auto-filed by /prospecting, unreviewed`; public contact details filled into empty fields (or
+correcting an unverified one), each with its status and source (§5); and at most two signals per
+firm, published after a clean dry run. None of them creates a tag, changes a
+`verified` value or touches a customer's lists or pipelines. Each records what it checked in
+Yellowtail's research log and ends with a report that is the whole record. Run by hand, they show
+cards like everything else. No other skill files without a card.
 
 ## 3. Yellowtail first, web second
 

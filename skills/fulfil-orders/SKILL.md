@@ -33,7 +33,7 @@ order's project.
 | --- | --- | --- |
 | `whoami` | step 1: platform admins only | no |
 | `list_orders` | step 2: the open queue (`open: true`), or one by `number` | no |
-| `get_order` | steps 3 and 6: the order, and `firmsNow`, its progress towards `targetFirms` | no |
+| `get_order` | steps 3, 4 and 6: the order, its `brief` and the buyer's `targeting`, and `firmsNow`, its progress towards `targetFirms` | no |
 | `update_order` | step 3: `in_progress` (assigns you); step 5: the `listId`; step 8: `delivered` with the List and a `deliveryNote`, or a `deskNote` | yes |
 | `get_project`, `list_tags` | step 4: today's interests, to compare with the order's frozen `brief` | no |
 | `list_lists`, `create_list`, `get_list` | steps 5 and 7: the List this order delivers | yes, the List |
@@ -63,6 +63,18 @@ order's project.
    differ from the brief, say so in the desk's note, and keep to the brief. An order with an empty
    brief (made before briefs were recorded) uses the project as it is. Never create a tag here
    (house rules §12).
+
+   Then read the buyer's **targeting** on the order (`get_order`, `targeting`), their own answers
+   from the purchase welcome, all optional: how much they are raising (`raiseSize`), whether they
+   have a lead (`lead`), the investor types and regions they want (`investorTypes`,
+   `geographies`, by name) and a note. They narrow the brief, never widen it past its interests:
+   - **Investor types and regions** they picked go first: fill the List from firms carrying them
+     before any others, and say in the desk's note if they ran short.
+   - **Raise size** decides cheque size: skip firms whose typical cheque is plainly far from it.
+   - **No lead yet** means firms that lead rounds come first; **has a lead** means followers.
+   - **The note** is read as the customer's own words: follow it where it fits the brief, and say
+     in the desk's note where it could not be.
+   No `targeting` (they skipped the questions, or the order predates them) means the brief alone.
 5. **Make the List.** The deliverable is a List in the customer's project, holding the
    `targetFirms` (200) investors that fit the brief best (Perry, 3 Nov 2026), not the whole catalog,
    which paying has already unlocked for them. If the order names a list already (`listId`, from an

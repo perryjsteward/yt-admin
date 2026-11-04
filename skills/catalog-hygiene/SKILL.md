@@ -1,6 +1,6 @@
 ---
 name: catalog-hygiene
-description: Yellowtail Admin — the desk only (platform admins). Sweep the whole investor catalog for duplicate firms and people, propose merge cards with a dry run first, and list the firms /find-investors filed unreviewed. Its only write is merge_companies, on approval. Use when someone on the team says "clean up the catalog", "catalog duplicates", "merge duplicate firms", "what did find-investors auto-file", or before a catalog export.
+description: Yellowtail Admin — the desk only (platform admins). Sweep the whole investor catalog for duplicate firms and people, propose merge cards with a dry run first, and list the firms /find-investors and /prospecting filed unreviewed. Its only write is merge_companies, on approval. Use when someone on the team says "clean up the catalog", "catalog duplicates", "merge duplicate firms", "what did find-investors or prospecting auto-file", or before a catalog export.
 argument-hint: "[kind, default investor]"
 ---
 
@@ -20,7 +20,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first.
 | `list_companies`, `list_people` | The sweep, every page (`nextCursor`) | yes |
 | `search_companies` | Name-only groups: keep a match with `name_similar` at 0.8 or more | yes |
 | `merge_companies` | The merge, `dryRun` defaulting to true | on approval |
-| `search_notes`, `update_note` | The firms `/find-investors` filed unreviewed (step 8) | yes |
+| `search_notes`, `update_note` | The firms `/find-investors` and `/prospecting` filed unreviewed (step 8) | yes |
 
 ## Steps
 
@@ -46,10 +46,11 @@ Yellowtail team, and pointed at `/yt:crm-hygiene` for their own project.
 7. **People.** There is no people merge tool. A duplicate person at a firm that was just merged
    often resolves itself (both now sit at the keeper: list them again). What is left is a checklist
    for the admin panel, with the keeper suggested; never `delete_person` from here.
-8. **Unreviewed firms.** `search_notes { scope: "all", q: "Auto-filed by /find-investors, unreviewed" }`,
-   all pages: the firms `/find-investors` filed without a card. Report the count and list them
+8. **Unreviewed firms.** `search_notes { scope: "all", q: "unreviewed" }`, all pages, keeping the
+   notes whose first line is `Auto-filed by /find-investors, unreviewed` or `Auto-filed by
+   /prospecting, unreviewed`: the firms those filed without a card. Report the count and list them
    (firm, filed when, for which workspace) after the duplicates, each pointing at
-   `/create-investor` (enrich) or a merge if it is also in a group above. Checking one is
+   `/yt:create-investor` (enrich) or a merge if it is also in a group above. Checking one is
    enriching it; once it is right, `update_note` drops the first line. Read-only here.
 
 ## Output
@@ -67,7 +68,7 @@ Display: inline — one Yellowtail widget in the chat, merge cards under it (`${
 
 **Look-alikes, not merged** · "Lantern Ventures" (lanternvc.com) ↔ "Lantern Capital" (lantern.de), 0.74
 **People to resolve in the admin panel** · Sarah Lee ×2 at Northwind Capital (same LinkedIn) → keep the one on 3 deals
-**Unreviewed, auto-filed by /find-investors** · 14 firms · Kiln Climate (12 Oct, Atlas Advisory) · … → `/create-investor` to check
+**Unreviewed, auto-filed by /find-investors and /prospecting** · 14 firms · Kiln Climate (12 Oct, Atlas Advisory) · … → `/yt:create-investor` to check
 
 Reply with any of: `approve all` · `approve 1` · `reject 1` · `1: keep the other one`
 ```
