@@ -1,6 +1,6 @@
 ---
 name: invite-founder
-description: Yellowtail Admin — Invite a founder you met to create their own free Yellowtail account, after making sure the catalog has good investors for them. Saves the invite as a draft, reads the startup's website for its sector, stage and geography, checks how many investors in Yellowtail fit, researches and files more from the web when coverage is thin (as /find-investors does), then shows the invite and sends it on your approval. Their ten free investors are picked once, at onboarding, so the research comes first. Use when someone says "invite this founder", "send [name] a Yellowtail invite", "I met a founder at [event]", or after a call with a founder who should try the product.
+description: Yellowtail Admin — Invite a founder you met to create their own free Yellowtail account, after making sure the catalog has good investors for them. Saves the invite as a draft, reads the startup's website for its sector, stage and geography, checks how many investors in Yellowtail fit, researches and files more from the web when coverage is thin (as /yt:investors find does), then shows the invite and sends it on your approval. Their ten free investors are picked once, at onboarding, so the research comes first. Use when someone says "invite this founder", "send [name] a Yellowtail invite", "I met a founder at [event]", or after a call with a founder who should try the product.
 argument-hint: "<email> <full name> [company website] [note]"
 ---
 
@@ -8,7 +8,7 @@ argument-hint: "<email> <full name> [company website] [note]"
 
 A **join invite** asks someone with no Yellowtail account to make one: an email with a link to
 `/join`, their name and address filled in, then reminders until they sign up (the app sends them;
-`docs` in the app: join invites). It is not `/add-user`, which brings someone into an existing
+`docs` in the app: join invites). It is not `/yt:setup user`, which brings someone into an existing
 project.
 
 **The research comes before the email.** A free account's ten investors are picked once, when the
@@ -17,7 +17,7 @@ sector Yellowtail covers thinly would get a weak ten for good. So this command s
 a draft, makes sure the catalog has strong firms for their raise, and only then sends.
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first. The research and filing are
-`/yt:find-investors`' (the `yt` plugin, steps 5 to 7), run on the
+`/yt:investors find`' (the `yt` plugin, steps 5 to 7), run on the
 founder's criteria instead of an open project.
 
 ## Tools
@@ -29,7 +29,7 @@ founder's criteria instead of an open project.
 | `create_join_invite` | step 3: the draft, `send: false` | yes, a draft (nothing is emailed) |
 | `list_tags` | step 4: the catalog's own words for their sector, stage and geography | no |
 | `list_companies` | step 5: how many investor firms fit, before and after | no |
-| `file_investor` | step 6: the new firms kept, as `/find-investors` step 7 files them | yes, only on a clean dry run |
+| `file_investor` | step 6: the new firms kept, as `/yt:investors find` step 7 files them | yes, only on a clean dry run |
 | `update_join_invite` | step 7: the desk's note on the invite | yes |
 | `send_join_invite` | step 8: the email, **only on the user's yes** | yes, sends |
 | `show_results` | output: the invite as a card (`get_join_invite`) | no |
@@ -52,10 +52,10 @@ founder's criteria instead of an open project.
    together; geography as well when it narrows sensibly). Note the count.
    - **40 or more** matching firms: coverage is fine. Say so and go to step 7.
    - **Fewer than 40**: research more (step 6).
-6. **Research and file.** Follow `/find-investors` steps 5 to 7 with the founder's criteria as the
+6. **Research and file.** Follow `/yt:investors find` steps 5 to 7 with the founder's criteria as the
    free-text criteria (no open project: skip its steps about the project's pipelines and lists).
    Aim for about 20 new firms that genuinely fit, each with evidence. File each kept firm exactly as
-   `/find-investors` files them: firm only, existing tags, `file_investor` dry run first, and a
+   `/yt:investors find` files them: firm only, existing tags, `file_investor` dry run first, and a
    profile note starting `Auto-filed by /find-investors, unreviewed`. Then re-run step 5's count.
 7. **Note what was done.** `update_join_invite` with a `note` that keeps the user's note and adds
    one line, e.g. "Catalog checked 3 Nov: 18 → 41 firms for seed climate, UK."
@@ -77,4 +77,4 @@ what happened to the email. One `show_results` card for the invite. Never paste 
 - The founder signs up from the link and onboards; their ten are picked then.
 - Follow their progress on the admin Invites page (status, then their stage), or with
   `list_join_invites` and `list_email_sends`.
-- Review the auto-filed firms in `/crm-hygiene --catalog`.
+- Review the auto-filed firms in `/catalog-hygiene`.

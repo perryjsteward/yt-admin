@@ -1,12 +1,12 @@
 ---
 name: catalog-hygiene
-description: Yellowtail Admin — the desk only (platform admins). Sweep the whole investor catalog for duplicate firms and people, propose merge cards with a dry run first, and list the firms /find-investors and /prospecting filed unreviewed. Its only write is merge_companies, on approval. Use when someone on the team says "clean up the catalog", "catalog duplicates", "merge duplicate firms", "what did find-investors or prospecting auto-file", or before a catalog export.
+description: Yellowtail Admin — the desk only (platform admins). Sweep the whole investor catalog for duplicate firms and people, propose merge cards with a dry run first, and list the firms /yt:investors find and /prospecting filed unreviewed. Its only write is merge_companies, on approval. Use when someone on the team says "clean up the catalog", "catalog duplicates", "merge duplicate firms", "what did find-investors or prospecting auto-file", or before a catalog export.
 argument-hint: "[kind, default investor]"
 ---
 
 # /catalog-hygiene
 
-The whole catalog, not one project: customers' `/yt:crm-hygiene` reports duplicates it can't fix,
+The whole catalog, not one project: customers' `/yt:pipeline hygiene` reports duplicates it can't fix,
 and this is where they get fixed. It reads every firm of a kind, groups the likely duplicates,
 dry-runs each merge and merges on approval. It never deletes.
 
@@ -20,12 +20,12 @@ Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first.
 | `list_companies`, `list_people` | The sweep, every page (`nextCursor`) | yes |
 | `search_companies` | Name-only groups: keep a match with `name_similar` at 0.8 or more | yes |
 | `merge_companies` | The merge, `dryRun` defaulting to true | on approval |
-| `search_notes`, `update_note` | The firms `/find-investors` and `/prospecting` filed unreviewed (step 8) | yes |
+| `search_notes`, `update_note` | The firms `/yt:investors find` and `/prospecting` filed unreviewed (step 8) | yes |
 
 ## Steps
 
 Only when `whoami.isPlatformAdmin` is true; anyone else is told catalog hygiene is for the
-Yellowtail team, and pointed at `/yt:crm-hygiene` for their own project.
+Yellowtail team, and pointed at `/yt:pipeline hygiene` for their own project.
 
 1. **Read.** `list_companies { kind: "investor", limit: 100 }` (or the kind the user names),
    following `nextCursor` to the end, keeping id, name, `websiteUrl`, `linkedinUrl`, scope
@@ -50,7 +50,7 @@ Yellowtail team, and pointed at `/yt:crm-hygiene` for their own project.
    notes whose first line is `Auto-filed by /find-investors, unreviewed` or `Auto-filed by
    /prospecting, unreviewed`: the firms those filed without a card. Report the count and list them
    (firm, filed when, for which workspace) after the duplicates, each pointing at
-   `/yt:create-investor` (enrich) or a merge if it is also in a group above. Checking one is
+   `/yt:investors research` (enrich) or a merge if it is also in a group above. Checking one is
    enriching it; once it is right, `update_note` drops the first line. Read-only here.
 
 ## Output
@@ -68,7 +68,7 @@ Display: inline — one Yellowtail widget in the chat, merge cards under it (`${
 
 **Look-alikes, not merged** · "Lantern Ventures" (lanternvc.com) ↔ "Lantern Capital" (lantern.de), 0.74
 **People to resolve in the admin panel** · Sarah Lee ×2 at Northwind Capital (same LinkedIn) → keep the one on 3 deals
-**Unreviewed, auto-filed by /find-investors and /prospecting** · 14 firms · Kiln Climate (12 Oct, Atlas Advisory) · … → `/yt:create-investor` to check
+**Unreviewed, auto-filed by /yt:investors find and /prospecting** · 14 firms · Kiln Climate (12 Oct, Atlas Advisory) · … → `/yt:investors research` to check
 
 Reply with any of: `approve all` · `approve 1` · `reject 1` · `1: keep the other one`
 ```
@@ -81,4 +81,4 @@ Reply with any of: `approve all` · `approve 1` · `reject 1` · `1: keep the ot
 
 ## What comes next
 
-- `/yt:create-investor` to enrich an unreviewed firm; `/signals intake` to file what you learned.
+- `/yt:investors research` to enrich an unreviewed firm; `/signals intake` to file what you learned.

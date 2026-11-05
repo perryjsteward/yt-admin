@@ -1,6 +1,6 @@
 ---
 name: tag-backfill
-description: Yellowtail Admin — the desk only (platform admins). After a new tag is made, find the firms across the catalog that should carry it, check each against its own description and portfolio, and propose retag cards in batches; it retags only on approval and never removes a tag. Use when someone on the team says "backfill this tag", "who else should be tagged Industrial AI", "retag the catalog for…", or after /yt:create-investor made a tag.
+description: Yellowtail Admin — the desk only (platform admins). After a new tag is made, find the firms across the catalog that should carry it, check each against its own description and portfolio, and propose retag cards in batches; it retags only on approval and never removes a tag. Use when someone on the team says "backfill this tag", "who else should be tagged Industrial AI", "retag the catalog for…", or after /yt:investors research made a tag.
 argument-hint: "<tag name or id>"
 ---
 
@@ -8,7 +8,7 @@ argument-hint: "<tag name or id>"
 
 A new tag is only as useful as the firms carrying it. Customers tag the firms they file as they
 file them; going back over the whole catalog for one tag is the desk's job, and this is it. It
-moved here from `/yt:create-investor` (Perry, 4 Nov 2026): a desk process never ships in `yt`.
+moved here from `/yt:investors research` (Perry, 4 Nov 2026): a desk process never ships in `yt`.
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first (§12 on tags).
 
@@ -27,7 +27,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first (§12 on tags).
 
 Only when `whoami.isPlatformAdmin` is true; anyone else is told backfilling a tag is for the
 Yellowtail team. A customer who just made a tag retags the firms they are working on as they file
-them (`/yt:create-investor`).
+them (`/yt:investors research`).
 
 1. **The tag.** Resolve the argument with `list_tags` (or `get_tag` for an id): name, kind, parent.
    No parent → the candidates come from notes and the user's own suggestions only; say so.
@@ -71,5 +71,5 @@ Reply with any of: `approve all` · `approve 1` · `reject 2` · `stop`
 
 ## What comes next
 
-- `/catalog-hygiene` if the sweep turned up duplicates; `/yt:create-investor` to enrich a firm
+- `/catalog-hygiene` if the sweep turned up duplicates; `/yt:investors research` to enrich a firm
   that was too thin to judge.

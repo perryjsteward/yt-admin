@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.1
+
+- **`yt`'s commands are nine areas with actions** (`yt` 0.12.0): every `/yt:` command named here
+  is the new one (`/yt:investors find`, `/yt:pipeline add`, `/yt:meetings summary`, …). The
+  marker `Auto-filed by /find-investors, unreviewed` is unchanged.
+- House rules and display guidance synced with `yt` 0.12.0 (byte-identical across the three
+  plugins); house rules §2 names `/yt-admin:signals scan`.
+- `/fulfil-orders` and `/invite-founder` point at `/catalog-hygiene` (not the old
+  `/crm-hygiene --catalog`).
+
 ## 0.4.0
 
 - **`/signals`, one command for signals** (Perry, 5 Nov 2026), replacing `/signal-intake`,

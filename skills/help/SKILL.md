@@ -31,7 +31,7 @@ Answer the question asked from the sections below, naming the command. With no q
 One command per area, with actions inside it: `/signals` is intake, scan and backfill. Its name
 alone works too; it picks the action from what you give it.
 
-Not here: a customer's own project is `/yt:crm-hygiene`; research a firm with `/yt:create-investor`.
+Not here: a customer's own project is `/yt:pipeline hygiene`; research a firm with `/yt:investors research`.
 
 ## The daily research
 

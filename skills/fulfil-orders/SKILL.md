@@ -1,6 +1,6 @@
 ---
 name: fulfil-orders
-description: Yellowtail Admin — Work the order queue. When a customer buys their investor list or the annual licence, Yellowtail makes an order that is due in 48 hours. This picks up the next open order (or the one you name), marks it in progress, builds a List in the customer's project of the 200 investors that fit their brief best (the project and interests frozen at purchase), researching and filing more from the web when the catalog is thin (as /find-investors does), gives it a pass over, then marks the order delivered with that List, which emails the customer a link to it. Built to run unattended on a schedule as well as by hand. Use when someone says "fulfil orders", "deliver order 1001", "work the order queue", "any orders waiting", or from a scheduled task that checks for orders.
+description: Yellowtail Admin — Work the order queue. When a customer buys their investor list or the annual licence, Yellowtail makes an order that is due in 48 hours. This picks up the next open order (or the one you name), marks it in progress, builds a List in the customer's project of the 200 investors that fit their brief best (the project and interests frozen at purchase), researching and filing more from the web when the catalog is thin (as /yt:investors find does), gives it a pass over, then marks the order delivered with that List, which emails the customer a link to it. Built to run unattended on a schedule as well as by hand. Use when someone says "fulfil orders", "deliver order 1001", "work the order queue", "any orders waiting", or from a scheduled task that checks for orders.
 argument-hint: "[order number] [--all] [--deliver] [--check]"
 ---
 
@@ -15,7 +15,7 @@ the order delivered with that List is what emails the customer a link to it. Thi
 work.
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first. The research and filing are
-`/yt:find-investors`' (the `yt` plugin, steps 4 to 7), run for the
+those of `/yt:investors find` (the `yt` plugin, steps 4 to 7), run for the
 order's project.
 
 ## Arguments
@@ -39,7 +39,7 @@ order's project.
 | `list_lists`, `create_list`, `get_list` | steps 5 and 7: the List this order delivers | yes, the List |
 | `list_prospects` | step 6: the catalog's fits for the project, best first | no |
 | `add_many_to_list` | step 6: the chosen firms, each with a suggested primary contact | yes |
-| `file_investor` | step 6: new firms from research, as `/find-investors` step 7 files them | yes, only on a clean dry run |
+| `file_investor` | step 6: new firms from research, as `/yt:investors find` step 7 files them | yes, only on a clean dry run |
 | `show_results` | output: the order as a card (`get_order`) | no |
 
 ## Steps
@@ -88,16 +88,16 @@ order's project.
    interests matched, recent signals, `bestContact`). Take the strong and good fits that match the
    brief, skipping any that look inactive (no investment in two years) or plainly off-thesis, and
    add them with `add_many_to_list` (`companyIds`; each gets a suggested primary contact) in
-   batches of 50. While the List is short of the target, run `/find-investors` steps 5 to 7 for this
+   batches of 50. While the List is short of the target, run `/yt:investors find` steps 5 to 7 for this
    project to find firms Yellowtail lacks (about 25 a batch), filing each kept firm exactly as
-   `/find-investors` files them (firm only, existing tags including the brief's interest tags,
+   `/yt:investors find` files them (firm only, existing tags including the brief's interest tags,
    `file_investor` dry run first, a profile note starting `Auto-filed by /find-investors,
    unreviewed`), then add those to the List too. Stop at the target, or when a research batch keeps
    fewer than 5 new firms: padding with weak fits is worse than an honest shortfall. Never put a
    possible-fit or may-be-inactive firm on the List to reach the number.
 7. **Pass over it.** `get_list` and read it top to bottom as the customer will: every firm fits the
    brief, every firm has a primary contact (a firm with nobody goes in the desk's note; contacts are
-   added with `/find-contacts`, which files people on a card the user approves, so in a run by hand
+   added with `/yt:investors contacts`, which files people on a card the user approves, so in a run by hand
    offer it for the strongest firms with nobody, and an unattended run lists them instead).
 8. **Deliver, or say why not.**
    - **The List has `targetFirms` firms:** write a `deliveryNote`, one honest line for the customer
@@ -137,5 +137,5 @@ short (`get_order`). A scheduled run with nothing to do says only "No orders wai
 ## What comes next
 
 - The customer gets "Your investor list is ready", which opens the List.
-- Review the auto-filed firms in `/crm-hygiene --catalog`.
+- Review the auto-filed firms in `/catalog-hygiene`.
 - An order left short is on Sales › Orders for a person to decide.

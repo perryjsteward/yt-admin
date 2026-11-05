@@ -53,7 +53,7 @@ client too: the research skills find and use them, and run on the web alone with
 | `/lead-enrichment` | Daily: public details for the next 25 firms and 25 people; enrichment connectors (Apollo, Lemlist, Clay, Hunter) for the rest |
 | `/schedules` | Sets up the scheduled runs above, or shows how they went (`--status`) |
 
-Install alongside `yt`: these skills point at `/yt:` commands (`/yt:find-investors`,
-`/yt:create-investor`) for the work they share with customers.
+Install alongside `yt`: these skills point at `/yt:` commands (`/yt:investors find`,
+`/yt:investors research`) for the work they share with customers.
 
 See INSTALL.md to install and release, and AGENTS.md for the rules of this repo.

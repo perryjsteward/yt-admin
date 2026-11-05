@@ -35,7 +35,7 @@ pass or that are waiting on a question.
 
 Reads never need approval.
 
-Where a skill says so (`/create-project`), an explicit instruction to make that write ("create a
+Where a skill says so (`/setup project`), an explicit instruction to make that write ("create a
 project for kestrel.example in Northbound") is the approval, once the skill's blocking questions
 are answered and nothing on the card is uncertain: the card is shown as the report of what was done,
 with how to undo it. When a reply does need the user, the question goes first, on one line, above
@@ -53,7 +53,7 @@ filled into it, without a card, and reported afterwards. Its status changes (`se
 `withdrawn`) still take a card each, because they reach the founder, and sending it is a Gmail
 draft of its own.
 
-**A new investor found by `/find-investors` is the third** (Perry, 17 Oct 2026). So that the
+**A new investor found by `/investors find` is the third** (Perry, 17 Oct 2026). So that the
 catalog grows with every search, it files each new investor firm its shortlist keeps, without a
 card: the firm only (no people, no new tags), only when the `file_investor` dry run passes with no
 duplicates, and with a profile note whose first line is `Auto-filed by /find-investors, unreviewed`,
@@ -61,7 +61,7 @@ which is how the desk finds them to check (`/yt-admin:catalog-hygiene`). Its hea
 says how many it filed.
 
 **The desk's scheduled research is the fourth** (Perry, 4 Nov 2026). Run with `--unattended` on a
-schedule, `/yt-admin:prospecting`, `/yt-admin:lead-enrichment` and `/yt-admin:signal-scan` write
+schedule, `/yt-admin:prospecting`, `/yt-admin:lead-enrichment` and `/yt-admin:signals scan` write
 without a card, because nobody is there to approve one: new investor firms and their people, only on
 a clean `file_investor` dry run, with existing tags, and a profile note whose first line is
 `Auto-filed by /prospecting, unreviewed`; public contact details filled into empty fields (or
@@ -201,8 +201,8 @@ into a checklist the user can apply, quote the refusal, and never retry it throu
 
 ## 10. End by naming the next step
 
-Every skill ends with the one or two commands that naturally come next (`/create-project` offers
-`/add-user` and `/create-pipeline`; `/find-investors` offers `/add-to-pipeline`). Offer them; don't
+Every skill ends with the one or two commands that naturally come next (`/setup project` offers
+`/setup user` and `/pipeline create`; `/investors find` offers `/pipeline add`). Offer them; don't
 run them unasked.
 
 ## 11. Report what happened
