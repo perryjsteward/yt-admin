@@ -7,6 +7,38 @@ Customers never install this. They get **Yellowtail Club**: the `yt` plugin
 (`perryjsteward/yt`) on the customer connector, `/api/mcp`. The managed service's practice is
 `yt-raise` (`perryjsteward/yt-raise`), also on the admin connector.
 
+## The two connectors
+
+| Connector | URL | Answers | Plugins |
+| --- | --- | --- | --- |
+| **Yellowtail Admin** | `https://www.yellowtail.club/api/mcp/admin` | platform admins only (403 for anyone else) | `yt-admin`, `yt-raise` |
+| **Yellowtail Club** | `https://www.yellowtail.club/api/mcp` | customers (while `customer.mcp` is off, platform admins only) | `yt` |
+
+Yellowtail Admin lists every Yellowtail Club tool plus the desk's: the global catalog, orders, join
+invites, accounts, research queues and Lemlist enrichment, proposals and snapshots, and the
+admin-only deletes. So these skills need only this connector, though they hand customer-side work to
+`/yt:` commands, which is why `yt` is installed alongside.
+
+## Install and connect
+
+In Claude Code:
+
+```
+claude plugin marketplace add perryjsteward/yt-admin
+claude plugin install yt-admin@yellowtail-admin
+```
+
+The plugin's `.mcp.json` brings the connector (server `yellowtail-admin`), so there is nothing to
+configure: run `/mcp`, pick **yellowtail-admin**, choose **Authenticate**, and sign in to Yellowtail
+with a platform admin account. In claude.ai or Claude Desktop, add it by hand: Settings → Connectors →
+**Add custom connector**, name it **Yellowtail Admin**, paste the URL above, **Add**, **Connect**,
+sign in and **Allow**. Ask Claude *"Who am I in Yellowtail?"*: `whoami` should say
+`isPlatformAdmin: true`. Not a platform admin, every call is refused.
+
+The scheduled research (`/prospecting`, `/lead-enrichment`, `/signal-scan`, `/fulfil-orders`) runs
+in a Claude Desktop scheduled task on a machine signed in to this connector: `/schedules` sets them
+up.
+
 | Command | What it does |
 | --- | --- |
 | `/help` | Which command for what |
