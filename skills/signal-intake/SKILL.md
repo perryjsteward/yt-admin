@@ -56,6 +56,14 @@ connector isn't connected.
 Web search and fetch are for research only (`references/research-an-investor.md`). Nothing from the
 web is written without being shown on a card.
 
+Other connectors, when the client has them (`${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md`):
+
+- **Apify**, to read a pasted LinkedIn or X post (or a partner's recent posts) that web fetch
+  cannot, and to check its date and wording; one run per batch of URLs, never a login of ours (§3).
+- **Enrichment connectors** (Apollo, Lemlist, Clay, Hunter or another), for a new or changed
+  person's work email, phone or LinkedIn the web did not give, in §2's order and with §2's
+  statuses and sources, shown on the card like any other value.
+
 ## The flow
 
 ### 1. Orient
@@ -257,6 +265,7 @@ Short, in this order:
 - `references/research-an-investor.md` — how to research a new firm or person, field by field.
 - `references/what-is-a-signal.md` — what counts, what doesn't, and the firm-tag rule.
 - `references/examples.md` — worked inputs with the expected proposal.
+- `${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md` — Apify and enrichment connectors, when connected.
 
 ## Output
 

@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.0
+
+- **Research connectors** (Perry, 5 Nov 2026): a new desk reference,
+  `references/research-connectors.md`, for finding which extra connectors a session has and using
+  them. It is not one of the references shared with `yt` and `yt-raise`.
+  - **Enrichment connectors**: `/lead-enrichment` uses whatever the client has connected (Apollo, a
+    Lemlist connector, Clay, Hunter or another) after the public web and before Yellowtail's own
+    Lemlist key (`enrich_person`). It keeps only matches whose firm and role agree with the record,
+    files `verified` only for an email the provider reports deliverable or verified, and names the
+    provider in each value's source. `--web-only` and `--enrich-max` (a budget across every
+    provider) replace `--no-lemlist` and `--lemlist-max`, which still work. `/prospecting` and
+    `/signal-intake` follow the same order.
+  - **Apify**: `/signal-scan` reads the LinkedIn and X posts of firms and their partners in bulk
+    through Apify actors, one LinkedIn and one X run per group of ten firms (`--apify-max`, default
+    10; `--no-apify`), and falls back to the web. Actors read public data only: never a login,
+    cookie or session of ours, never an actor that messages, connects, likes or follows. Each
+    research check records the actor and run, so the desk can pin its choices in the reference's
+    **Pinned actors** table. `/signal-intake` and `/backfill-deal-signals` may use Apify too.
+- `/schedules` lists the enrichment connectors and Apify as optional for the daily runs. They must
+  be connected in the client that runs the schedule.
+
 ## 0.2.0
 
 - **`/tag-backfill`** (Perry, 4 Nov 2026): after a new tag, find the catalog's firms that should

@@ -32,6 +32,7 @@ accounts, and that nothing was read or written. Note today's date: the 90-day wi
 | `search_companies` (kind `account`) | Whether the startup that raised is in Yellowtail (context only) | optional |
 | `file_signal` | `dryRun: true` for every card, then filing the approved ones | yes |
 | Web search / fetch | The firm's news and portfolio pages, press releases, tech.eu, Sifted, Crunchbase news | yes |
+| Apify (connector) | The firm's and its partners' LinkedIn and X posts announcing deals, and its portfolio page when it needs a browser; one run per batch of firms (`${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md` §3) | optional |
 
 ## Steps
 

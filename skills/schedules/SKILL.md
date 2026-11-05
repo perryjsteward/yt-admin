@@ -18,8 +18,8 @@ Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` §2 (the desk's scheduled
 | --- | --- | --- | --- |
 | Orders | `/yt-admin:fulfil-orders --deliver` | hourly | Builds and delivers each open order's List of 200 |
 | Prospecting | `/yt-admin:prospecting --unattended` | daily, 06:00 | New investor firms (and their people) for the next 5 paying projects |
-| Lead enrichment | `/yt-admin:lead-enrichment --unattended` | daily, 07:00 | Public details for the next 25 firms and 25 people; Lemlist for the rest |
-| Signal scan | `/yt-admin:signal-scan --unattended` | daily, 08:00 | The next 50 subscribed customers' investors scanned; 1–2 signals each, published |
+| Lead enrichment | `/yt-admin:lead-enrichment --unattended` | daily, 07:00 | Public details for the next 25 firms and 25 people; enrichment connectors and Lemlist for the rest |
+| Signal scan | `/yt-admin:signal-scan --unattended` | daily, 08:00 | The next 50 subscribed customers' investors scanned (LinkedIn and X through Apify when connected); 1–2 signals each, published |
 
 Run them in that order on a day: prospecting files new firms, enrichment fills them in, the scan
 reads them. Times are the desk's local time; nothing customer-facing depends on them. Weekdays only
@@ -32,15 +32,25 @@ Every daily run needs:
   allowed;
 - **web search and fetch** in the client;
 - for Lemlist, `LEMLIST_API_KEY` set on the Yellowtail server (`docs/SETUP.md`); without it
-  `/lead-enrichment` uses the web only and says so.
+  `/lead-enrichment` uses the web and any enrichment connectors, and says so.
+
+And, optional but worth it, connected **in the client that runs the schedule**
+(`${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md` §1):
+
+- **enrichment connectors** (Apollo, Lemlist, Clay, Hunter or another) for `/lead-enrichment` and
+  `/prospecting`;
+- **Apify** for `/signal-scan`: LinkedIn and X posts in bulk, about 10 actor runs a day at the
+  default batch.
 
 ## Steps
 
 1. **Who.** `whoami`: a platform admin with a write key, or stop and say these are the desk's.
-2. **`--status`**: for each daily task, `list_research_checks { kind, since: <yesterday 00:00> }`
+2. **What is connected.** Note which enrichment connectors are in this session, and whether Apify
+   is (`research-connectors.md` §1); they must also be connected wherever the schedule will run.
+3. **`--status`**: for each daily task, `list_research_checks { kind, since: <yesterday 00:00> }`
    — how many subjects were checked and how many found something — and `list_research_queue` for
    what is next. A task with no checks since yesterday has not run: say so first.
-3. **Set them up.** Look at what this client can do, and use the first that applies:
+4. **Set them up.** Look at what this client can do, and use the first that applies:
    - **A scheduling tool is available** (Claude Desktop's scheduled tasks, or Claude Code's
      `/schedule` for a cloud routine): offer each task in the table as one item, "set up all four"
      as the default, and create the approved ones with the prompt and cadence exactly as written.
@@ -50,8 +60,8 @@ Every daily run needs:
      Desktop scheduled task or a cloud routine, so say so.
    - **Nothing to schedule with**: show the table and how to add each in Claude Desktop (Scheduled →
      New task → paste the prompt → set the time), on a machine that stays awake.
-4. **Report** what was created, what was already there, and what needs a person (a connector to
-   sign in, `LEMLIST_API_KEY`).
+5. **Report** what was created, what was already there, and what needs a person (a connector to
+   sign in, `LEMLIST_API_KEY`, an enrichment connector or Apify to connect).
 
 ## Output
 
@@ -61,8 +71,8 @@ Display: inline — the schedule table above, then one line per task: created, a
 **Desk schedules** · 4 scheduled tasks
 Orders · hourly · already set up
 Prospecting · daily 06:00 · created
-Lead enrichment · daily 07:00 · created · Lemlist not set up (web only)
-Signal scan · daily 08:00 · created
+Lead enrichment · daily 07:00 · created · Apollo connected · Lemlist not set up
+Signal scan · daily 08:00 · created · Apify not connected (web only)
 ```
 
 ## What comes next

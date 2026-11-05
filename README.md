@@ -37,7 +37,9 @@ sign in and **Allow**. Ask Claude *"Who am I in Yellowtail?"*: `whoami` should s
 
 The scheduled research (`/prospecting`, `/lead-enrichment`, `/signal-scan`, `/fulfil-orders`) runs
 in a Claude Desktop scheduled task on a machine signed in to this connector: `/schedules` sets them
-up.
+up. Connect any enrichment connectors (Apollo, Lemlist, Clay, Hunter) and **Apify** in that same
+client too: the research skills find and use them, and run on the web alone without them
+(`references/research-connectors.md`).
 
 | Command | What it does |
 | --- | --- |
@@ -49,8 +51,8 @@ up.
 | `/catalog-hygiene` | Duplicates across the catalog, merged on approval; unreviewed auto-filed firms |
 | `/tag-backfill` | After a new tag, retag the catalog's firms that should carry it, on approval |
 | `/prospecting` | Daily: new investor firms and their people for the next five paying projects |
-| `/lead-enrichment` | Daily: public details for the next 25 firms and 25 people; Lemlist for the rest |
-| `/signal-scan` | Daily: the next 50 subscribed customers' investors scanned, 1–2 signals each published |
+| `/lead-enrichment` | Daily: public details for the next 25 firms and 25 people; enrichment connectors (Apollo, Lemlist, Clay, Hunter) for the rest |
+| `/signal-scan` | Daily: the next 50 subscribed customers' investors scanned (LinkedIn and X through Apify when connected), 1–2 signals each published |
 | `/schedules` | Sets up the scheduled runs above, or shows how they went (`--status`) |
 
 Install alongside `yt`: these skills point at `/yt:` commands (`/yt:find-investors`,

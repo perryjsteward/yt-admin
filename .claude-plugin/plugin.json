@@ -1,7 +1,7 @@
 {
   "name": "yt-admin",
   "displayName": "Yellowtail Admin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Yellowtail Admin, the Yellowtail team's desk plugin for the admin MCP connector: fulfil customers' orders, invite founders, file signals from event notes and announced deals, keep the investor catalog clean, and run the daily research — prospecting new investors for paying customers, enriching the catalog's contact details and scanning investors for signals — on a schedule. Platform admins only; customers use yt (Yellowtail Club).",
   "author": {
     "name": "Yellowtail",
