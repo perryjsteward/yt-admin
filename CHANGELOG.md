@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.0
+
+- **`/signals`, one command for signals** (Perry, 5 Nov 2026), replacing `/signal-intake`,
+  `/signal-scan` and `/backfill-deal-signals`: fewer skills that each do more, with the detail in
+  references read only for the action being run. `/signals intake`, `/signals scan` and `/signals
+  backfill` (or `/signals` alone, which picks the action from what it is given). The three
+  procedures are unchanged, now `skills/signals/references/intake.md`, `scan.md` and
+  `backfill.md`, beside the references `/signal-intake` had.
+  - **Scheduled tasks**: the daily scan's prompt is now `/yt-admin:signals scan --unattended`.
+    Re-run `/schedules` (or edit the "Yellowtail · Signal scan" task) after updating.
+  - House rules §2 still names `/yt-admin:signal-scan`: it is shared byte-for-byte with `yt` and
+    `yt-raise`, and changes with them.
+- **`/help` explains the desk**, not only the commands: the daily research and its schedule, what
+  `--unattended` may write, and which connectors are needed (Yellowtail Admin) and which make the
+  runs better (Apollo, Lemlist, Clay, Hunter, Apify).
+
 ## 0.3.0
 
 - **Research connectors** (Perry, 5 Nov 2026): a new desk reference,

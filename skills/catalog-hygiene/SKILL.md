@@ -81,4 +81,4 @@ Reply with any of: `approve all` · `approve 1` · `reject 1` · `1: keep the ot
 
 ## What comes next
 
-- `/yt:create-investor` to enrich an unreviewed firm; `/signal-intake` to file what you learned.
+- `/yt:create-investor` to enrich an unreviewed firm; `/signals intake` to file what you learned.

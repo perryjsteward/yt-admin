@@ -16,7 +16,7 @@ stage or region: the managed service may focus on a few sectors, the catalog doe
 2026).
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first (§2 on unattended runs, §4, §5 and §12),
-then `../signal-intake/references/research-an-investor.md`, which is how a firm and its people are
+then `${CLAUDE_PLUGIN_ROOT}/skills/signals/references/research-an-investor.md`, which is how a firm and its people are
 researched and what a complete card holds.
 
 ## Arguments
@@ -106,7 +106,7 @@ researched and what a complete card holds.
 
 ## Running it on a schedule
 
-Daily, early, before `/signal-scan`: `/yt-admin:prospecting --unattended`. `/schedules` sets it up
+Daily, early, before `/signals scan`: `/yt-admin:prospecting --unattended`. `/schedules` sets it up
 with the other two (Claude Desktop scheduled task, or `/schedule` in Claude Code). At five projects
 a day every paying project is prospected again within a week while there are fewer than 35 of them;
 raise `--projects` as they grow.

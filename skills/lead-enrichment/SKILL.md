@@ -115,7 +115,7 @@ connectors are connected, their order, and what each result is worth.
   email or phone (house rules §5). The server refuses a personal mailbox anyway.
 - **Never invent.** A field with no source stays empty, and the check says where you looked.
 - **The firm on file is the firm.** A person found to have moved firm is not moved here: say so in
-  the report for `/signal-intake` (a partner move is a signal).
+  the report for `/signals intake` (a partner move is a signal).
 - **Paid lookups come after the web and have a budget**: what the web did not give, the fields
   still missing, `--enrich-max` a run across every provider. A provider's match at another firm is a
   move to report, not a value to file.
@@ -142,11 +142,11 @@ People: 21 of 25 got something
   northwind.vc/contact, Apollo, Lemlist
 - Tom Okafor, Helios Ventures: email tom@helios.vc (verified; apollo, verified)
 - James Rowe, Kiln Climate: email james@kiln.vc → still on kiln.vc/team (checked)
-Moved firm (for /signal-intake): Priya Raman — now at Saltmarsh Partners (LinkedIn)
+Moved firm (for /signals intake): Priya Raman — now at Saltmarsh Partners (LinkedIn)
 Nothing found (back in 30 days): 4 firms, 4 people
 ```
 
 ## What comes next
 
-- `/signal-intake` for anyone found to have moved firm; `/catalog-hygiene` if a search turned up a
+- `/signals intake` for anyone found to have moved firm; `/catalog-hygiene` if a search turned up a
   duplicate firm or person.

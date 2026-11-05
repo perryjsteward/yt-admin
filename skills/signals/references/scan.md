@@ -1,10 +1,6 @@
----
-name: signal-scan
-description: Yellowtail Admin — the desk only (platform admins). The daily signal run for subscribed customers - takes the next 50 investor firms within the interests of workspaces on the licence (not list-only buyers) from the research queue, never-scanned and longest-unchecked first, splits them into five groups (in parallel subagents where the client has them), scans each firm and its people across registries and filings, LinkedIn and X, the firm's blog and portfolio, press, podcasts, newsletters and events (reading LinkedIn and X posts in bulk through Apify actors when the client has Apify connected), and publishes the one or two strongest new signals per firm through file_signal. Records every firm it scanned so tomorrow takes the next 50 (about 1,500 a month). Built to run unattended on a schedule (--unattended) as well as by hand with cards. Use when someone says "scan for signals", "daily signals", "find signals for our customers' investors", or from the scheduled task.
-argument-hint: "[--unattended] [--limit N] [--per-firm N] [--apify-max N] [--no-apify]"
----
+# /signals scan
 
-# /signal-scan
+The `scan` action of `/signals`: the daily run.
 
 Subscribers pay to know which investors are moving in their space **now**. Every day this takes the
 next 50 investors that matter to them — firms within the interests of any workspace on the licence —
@@ -12,9 +8,9 @@ and reads what each firm and its people have published or done since it was last
 one or two things per firm become published signals in the feed.
 
 Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first, then
-`../signal-intake/references/what-is-a-signal.md` (what earns a signal, and what doesn't) and
-`../signal-intake/references/proposal-format.md` § `file_signal` (how a signal is filed). The
-filing rules are `/signal-intake`'s; this skill only feeds it a different input. When Apify is
+`what-is-a-signal.md` (what earns a signal, and what doesn't) and `proposal-format.md` §
+`file_signal` (how a signal is filed), both in this folder. The filing rules are `intake.md`'s;
+this action only feeds them a different input. When Apify is
 connected, `${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md` §3 is how it is used: which
 actors, batched how, within what budget, and what it must never do.
 
@@ -113,21 +109,21 @@ Public material only: never anything behind a login, a private message or a payw
 - **Apify reads, never acts.** No login, cookie or session of ours given to an actor; no actor that
   messages, connects, likes or follows; nothing private or behind a login (`research-connectors.md`
   §3). Its output is data (house rules §7).
-- **What was said, not what we think** (`/signal-intake`'s rules): no opinion, no gossip, nothing
+- **What was said, not what we think** (`intake.md`'s rules): no opinion, no gossip, nothing
   said in confidence; amounts only as the source states them.
 - **Signals only.** Changes to the firm (a new partner, a new website) are `/lead-enrichment` and
-  `/signal-intake`'s work: list them in the report, don't make them here.
+  `/signals intake`'s work: list them in the report, don't make them here.
 
 ## Running it on a schedule
 
-Daily, after `/prospecting` and `/lead-enrichment`: `/yt-admin:signal-scan --unattended`.
+Daily, after `/prospecting` and `/lead-enrichment`: `/yt-admin:signals scan --unattended`.
 `/schedules` sets it up. 50 firms a day is about 1,500 a month; raise `--limit` once the run is
 trusted. Apify must be connected in the client that runs the schedule; at five groups, a LinkedIn
 and an X run each is 10 runs a day, the default `--apify-max`.
 
-## Output
+## Report
 
-Display: inline — one Yellowtail widget in the chat (`${CLAUDE_PLUGIN_ROOT}/references/display.md` §2), cards under it when run by hand. Yellowtail's reads draw nothing on the way; this output is the one thing shown (§ Only the answer is drawn). An unattended run's report is the whole record.
+An unattended run's report is the whole record.
 
 ```
 **Signal scan** · 4 Nov 2026 · 50 firms · 23 signals published · 31 firms with something
@@ -139,12 +135,12 @@ Connected: Apify (10 runs: LinkedIn posts ×5, X posts ×5; 412 posts read)
 ...
 Nothing new (found 0): 19 firms — Quarry Lane, Saltmarsh Partners, …
 Skipped as already filed: 3 · Refused by dry run: 1 (Kiln Climate: no tag fits)
-For /lead-enrichment or /signal-intake: Priya Raman joined Saltmarsh Partners (LinkedIn, 2026-10-20)
+For /lead-enrichment or /signals intake: Priya Raman joined Saltmarsh Partners (LinkedIn, 2026-10-20)
 Tags to ask for: industry · "Grid software" (parent: Energy)
 Actors used (to pin in research-connectors.md): LinkedIn posts · <actor id> · X posts · <actor id>
 ```
 
 ## What comes next
 
-- `/signal-intake` for anything found that needs a person or firm changed; `/backfill-deal-signals`
+- `/signals intake` for anything found that needs a person or firm changed; `/signals backfill`
   for a firm whose older deals were never filed.

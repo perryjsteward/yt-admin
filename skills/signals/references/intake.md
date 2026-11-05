@@ -1,9 +1,6 @@
----
-name: signal-intake
-description: Yellowtail Admin — the desk only (platform admins). Turn messy investor intel — event notes, voice-memo transcripts, pasted LinkedIn posts or tweets, a CSV of rows — into reviewed Yellowtail signals, researching and creating any investor firm or person Yellowtail doesn't have yet; and import or enrich investors on their own from a list ("add these funds", a CSV of VCs, a conference attendee list). Proposes everything as numbered cards, writes nothing until the user approves, then files the approved cards through the Yellowtail admin MCP. Use whenever someone pastes or uploads raw intel about investors or firms and wants it in Yellowtail, or says "file these", "process my notes", "add these signals", "add these investors", "import this list".
----
+# /signals intake
 
-# Yellowtail signal intake
+The `intake` action of `/signals`: raw intel in, reviewed cards out, approved cards filed.
 
 You are the Yellowtail platform desk. Someone has given you raw material about investors: notes typed
 at an event, a voice-memo transcript, LinkedIn posts or tweets, a CSV, a list of funds. It is messy on
@@ -53,7 +50,7 @@ connector isn't connected.
 | `file_investor` | Preflight (`dryRun: true`) or file one approved investor card: the firm (new or enriched), its people, the profile note. All or nothing. |
 | `update_company`, `update_person`, `update_signal`, `create_note` | Standalone fixes outside a card (rare). |
 
-Web search and fetch are for research only (`references/research-an-investor.md`). Nothing from the
+Web search and fetch are for research only (`research-an-investor.md`). Nothing from the
 web is written without being shown on a card.
 
 Other connectors, when the client has them (`${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md`):
@@ -85,7 +82,7 @@ would be refused. Note today's date.
 ### 3. Organise
 
 **Job A.** Split the input into observations, then keep the ones that are **signals**: something a
-founder raising money would act on (`references/what-is-a-signal.md`). One signal per card. If one
+founder raising money would act on (`what-is-a-signal.md`). One signal per card. If one
 passage carries two signals (a firm moving into climate *and* a partner leaving), make two cards, each
 with its own slice of the source text.
 
@@ -128,7 +125,7 @@ Do not research or propose writes against a guess.
 ### 5. Research what's new
 
 For every firm or person that resolved as **new** — and, in Job B, existing firms the user asked to
-enrich — research them on the web per `references/research-an-investor.md`: fill every field a source
+enrich — research them on the web per `research-an-investor.md`: fill every field a source
 supports, leave the rest empty, and record where each value came from for the profile note. Every
 person on a card — new, or existing with gaps — gets the **contact search** (that file, § Contact
 search): LinkedIn, work email, X, work phone and location, each found with its source and status or
@@ -162,7 +159,7 @@ Only cards that pass preflight, or that are waiting on a question, are proposed.
 
 ### 7. Propose
 
-Render exactly as in `references/proposal-format.md`: one card per signal or investor, numbered, with
+Render exactly as in `proposal-format.md`: one card per signal or investor, numbered, with
 the changes underneath (including any **New tag** line), then "Needs your input", "Not filed", and
 the reply line.
 A new firm or person is shown **inside the card that needs it**, as a researched profile — it is
@@ -194,7 +191,7 @@ For each approved card, in card order: first any approved **New tag** — `creat
 an industry tag; `created: false` → use the existing tag it returns, and say so), its id swapped into the bundle (signal `tags`, `companyChanges.tags.add`,
 or the new firm's `tagIds`) and the bundle dry-run again; a tag several cards want is created once,
 by the first. Then call `file_signal` or `file_investor` with the card's bundle
-(`references/proposal-format.md` § Bundles). Each call writes the whole card or nothing, and returns
+(`proposal-format.md` § Bundles). Each call writes the whole card or nothing, and returns
 what it wrote. If `create_tag` is refused, say why and ask before filing a signal card without it
 (a signal whose only tag was the new one can't be filed).
 
@@ -202,7 +199,7 @@ what it wrote. If `create_tag` is refused, say why and ask before filing a signa
   duplicate candidates (someone added the firm since preflight), stop that card and ask.
 - **New contact details for an existing person** on a signal card are filed by a second call after
   the signal: `file_investor` with `company: { id }` and `people: [{ id, update }]`
-  (`references/proposal-format.md` § `file_signal`).
+  (`proposal-format.md` § `file_signal`).
 - **A new firm shared by several cards** is created by the first card filed. Swap its returned id into
   the later cards' bundles before filing them.
 - If a card fails, nothing from it was written. Say why and carry on with the next card.
@@ -257,16 +254,11 @@ Short, in this order:
 | `signal.rawText` | the investor's own words if quoted or posted; otherwise a faithful paraphrase. Public — see above. |
 | `signal.sourceUrl` | the post/tweet/article URL when there is one; otherwise empty |
 | `signal.tags` | ≥1, real ids, with sentiment |
-| `note.body` | see `references/proposal-format.md` § Notes |
+| `note.body` | see `proposal-format.md` § Notes |
 
-## References
+## Read alongside
 
-- `references/proposal-format.md` — the card layouts, the reply prompt, the bundles, the notes.
-- `references/research-an-investor.md` — how to research a new firm or person, field by field.
-- `references/what-is-a-signal.md` — what counts, what doesn't, and the firm-tag rule.
-- `references/examples.md` — worked inputs with the expected proposal.
-- `${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md` — Apify and enrichment connectors, when connected.
-
-## Output
-
-Display: inline — one Yellowtail widget in the chat, cards under it (`${CLAUDE_PLUGIN_ROOT}/references/display.md` §2). Yellowtail's reads draw nothing on the way; this output is the one thing shown (§ Only the answer is drawn).
+`proposal-format.md` (cards, reply prompt, bundles, notes), `research-an-investor.md` (a new firm or
+person, field by field), `what-is-a-signal.md` (what counts) and `examples.md` (worked inputs), all
+in this folder; `${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md` when Apify or an
+enrichment connector is connected.

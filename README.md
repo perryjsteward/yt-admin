@@ -35,7 +35,7 @@ with a platform admin account. In claude.ai or Claude Desktop, add it by hand: S
 sign in and **Allow**. Ask Claude *"Who am I in Yellowtail?"*: `whoami` should say
 `isPlatformAdmin: true`. Not a platform admin, every call is refused.
 
-The scheduled research (`/prospecting`, `/lead-enrichment`, `/signal-scan`, `/fulfil-orders`) runs
+The scheduled research (`/prospecting`, `/lead-enrichment`, `/signals scan`, `/fulfil-orders`) runs
 in a Claude Desktop scheduled task on a machine signed in to this connector: `/schedules` sets them
 up. Connect any enrichment connectors (Apollo, Lemlist, Clay, Hunter) and **Apify** in that same
 client too: the research skills find and use them, and run on the web alone without them
@@ -46,13 +46,11 @@ client too: the research skills find and use them, and run on the web alone with
 | `/help` | Which command for what |
 | `/fulfil-orders` | Work the order queue; build and deliver each project's List of 200 |
 | `/invite-founder` | Invite a founder to a free account after a catalog check |
-| `/signal-intake` | Event notes, posts, transcripts or a CSV into reviewed signals and firms |
-| `/backfill-deal-signals` | Signals from investors' announced deals |
+| `/signals` | Everything signals, one command: `intake` (event notes, posts, transcripts or a CSV into reviewed signals and firms), `scan` (daily: the next 50 subscribed customers' investors, LinkedIn and X through Apify when connected, 1–2 signals each published), `backfill` (investors' announced deals) |
 | `/catalog-hygiene` | Duplicates across the catalog, merged on approval; unreviewed auto-filed firms |
 | `/tag-backfill` | After a new tag, retag the catalog's firms that should carry it, on approval |
 | `/prospecting` | Daily: new investor firms and their people for the next five paying projects |
 | `/lead-enrichment` | Daily: public details for the next 25 firms and 25 people; enrichment connectors (Apollo, Lemlist, Clay, Hunter) for the rest |
-| `/signal-scan` | Daily: the next 50 subscribed customers' investors scanned (LinkedIn and X through Apify when connected), 1–2 signals each published |
 | `/schedules` | Sets up the scheduled runs above, or shows how they went (`--status`) |
 
 Install alongside `yt`: these skills point at `/yt:` commands (`/yt:find-investors`,

@@ -19,7 +19,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` §2 (the desk's scheduled
 | Orders | `/yt-admin:fulfil-orders --deliver` | hourly | Builds and delivers each open order's List of 200 |
 | Prospecting | `/yt-admin:prospecting --unattended` | daily, 06:00 | New investor firms (and their people) for the next 5 paying projects |
 | Lead enrichment | `/yt-admin:lead-enrichment --unattended` | daily, 07:00 | Public details for the next 25 firms and 25 people; enrichment connectors and Lemlist for the rest |
-| Signal scan | `/yt-admin:signal-scan --unattended` | daily, 08:00 | The next 50 subscribed customers' investors scanned (LinkedIn and X through Apify when connected); 1–2 signals each, published |
+| Signal scan | `/yt-admin:signals scan --unattended` | daily, 08:00 | The next 50 subscribed customers' investors scanned (LinkedIn and X through Apify when connected); 1–2 signals each, published |
 
 Run them in that order on a day: prospecting files new firms, enrichment fills them in, the scan
 reads them. Times are the desk's local time; nothing customer-facing depends on them. Weekdays only
@@ -39,7 +39,7 @@ And, optional but worth it, connected **in the client that runs the schedule**
 
 - **enrichment connectors** (Apollo, Lemlist, Clay, Hunter or another) for `/lead-enrichment` and
   `/prospecting`;
-- **Apify** for `/signal-scan`: LinkedIn and X posts in bulk, about 10 actor runs a day at the
+- **Apify** for `/signals scan`: LinkedIn and X posts in bulk, about 10 actor runs a day at the
   default batch.
 
 ## Steps

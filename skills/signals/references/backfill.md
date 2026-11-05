@@ -1,19 +1,15 @@
----
-name: backfill-deal-signals
-description: Yellowtail Admin — the desk only (platform admins); anyone else is told so and nothing runs. Backfills signals from investors' announced deals - for a batch of up to ten investor firms (ids, names, or the next firms in the priority set in reports/1.7-signal-backfill-set.md), researches each firm's deals announced in the last 90 days from public sources (the firm's news and portfolio pages, press releases, tech.eu, Sifted, Crunchbase news), and proposes one signal card per deal - the channel it was announced in as the type, the real announcement date, an "Invested in" or "Led" summary, the source URL and at least one tag (the startup's industry, the round's stage). Skips deals already filed, dry-runs every card through file_signal, shows the batch as a report and files only what is approved. Use when the desk says "backfill deal signals", "run the next backfill batch", "file recent deals for these ten firms", "/backfill-deal-signals".
-argument-hint: "[firm ids or names, up to 10 | --next]"
----
+# /signals backfill
 
-# Backfill deal signals
+The `backfill` action of `/signals`: signals from investors' announced deals.
 
 Yellowtail promises investors who are leaning into a founder's space **right now**, and a recent
 announced deal is the plainest evidence of that. Most firms in the catalog have none on file. This
 skill reads what each firm has announced in the last 90 days and turns each deal into a signal,
 one reviewed card at a time.
 
-Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first, then `../signal-intake/references/what-is-a-signal.md`
-and `../signal-intake/references/research-an-investor.md`. The filing rules are `/signal-intake`'s;
-this skill only feeds it a different input.
+Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first, then `what-is-a-signal.md`
+and `research-an-investor.md` (this folder). The filing rules are `intake.md`'s; this action only
+feeds them a different input.
 
 ## Desk only
 
@@ -109,9 +105,6 @@ why, and which firms of the set are left.
 
 ## What comes next
 
-- `/backfill-deal-signals --next` for the next ten firms.
-- `/signal-intake` for anything found that isn't a deal (a thesis post, a partner move).
+- `/signals backfill --next` for the next ten firms.
+- `/signals intake` for anything found that isn't a deal (a thesis post, a partner move).
 
-## Output
-
-Display: inline — one Yellowtail widget in the chat, cards under it (`${CLAUDE_PLUGIN_ROOT}/references/display.md` §2). Yellowtail's reads draw nothing on the way; this output is the one thing shown (§ Only the answer is drawn).

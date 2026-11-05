@@ -2,8 +2,8 @@
 
 The desk's research skills work on the Yellowtail Admin connector and the open web alone. When the
 client has more connected, they use it: **enrichment connectors** for contact details
-(`/lead-enrichment`, `/prospecting`, `/signal-intake`) and **Apify** for reading public LinkedIn and
-X posts and other sources at scale (`/signal-scan`, `/backfill-deal-signals`, `/signal-intake`).
+(`/lead-enrichment`, `/prospecting`, `/signals intake`) and **Apify** for reading public LinkedIn and
+X posts and other sources at scale (every `/signals` action).
 None is required. A run without them is a normal run, and says once what it did without.
 
 This file is the desk's only; it is not one of the references shared with `yt` and `yt-raise`.
@@ -55,7 +55,7 @@ budget (`--enrich-max`, default 25 lookups across all providers).
 **What a result is worth.**
 
 - A provider's match is kept only when the firm and the role agree with what is on file: a match at
-  another firm is the person's move (report it for `/signal-intake`), not an email to file.
+  another firm is the person's move (report it for `/signals intake`), not an email to file.
 - **Work details only.** A personal mailbox (gmail, outlook, icloud and the like), a personal
   mobile, or a home address is dropped, whatever the provider says; the server refuses a personal
   mailbox anyway.
@@ -74,7 +74,7 @@ Apify runs **actors**, ready-made scrapers billed per run, on Apify's side. The 
 what web search reads badly: recent LinkedIn posts by a firm and its partners, recent X posts,
 pages that need a browser to render, and searches across many firms at once.
 
-**What it is for**, by source in `/signal-scan`'s table:
+**What it is for**, by source in `/signals scan`'s table:
 
 | Source | Actor to look for | Input |
 | --- | --- | --- |
