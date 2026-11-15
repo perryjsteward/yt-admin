@@ -1,141 +1,161 @@
 ---
 name: fulfil-orders
-description: Yellowtail Admin — Work the order queue. When a customer buys their investor list or the annual licence, Yellowtail makes an order that is due in 48 hours. This picks up the next open order (or the one you name), marks it in progress, builds a List in the customer's project of the 200 investors that fit their brief best (the project and interests frozen at purchase), researching and filing more from the web when the catalog is thin (as /yt:investors find does), gives it a pass over, then marks the order delivered with that List, which emails the customer a link to it. Built to run unattended on a schedule as well as by hand. Use when someone says "fulfil orders", "deliver order 1001", "work the order queue", "any orders waiting", or from a scheduled task that checks for orders.
-argument-hint: "[order number] [--all] [--deliver] [--check]"
+description: Yellowtail Admin — Work the order queue. A customer who buys their investor list or the licence gets an order due in 48 hours. This picks up the next open order (or the one named), writes the investor profile from the brief and the buyer's targeting, builds a pool from the catalog and fresh web research, scores every firm, has each checked three ways (fit, live, contacts) by a verifier that did not research it, finds 2-3 people per firm with verified contacts (Hunter, Lemlist) plus the firm's website, LinkedIn, X, email and phone, makes sure each has a recent firm and person signal (reusing ones on file), fills a List in the customer's project with the 200+ that pass, each noted with why it is there, and delivers the order, which emails the customer. Resumable; runs unattended hourly or by hand. Use for "fulfil orders", "deliver order 1001", "work the order queue", "any orders waiting", or a scheduled task.
+argument-hint: "[order number] [--all] [--deliver] [--check] [--batch N]"
 ---
 
 # Fulfil orders
 
 An **order** is a customer paying for their investor list (`offer: list`, a one-off) or the annual
-licence (`offer: licence`) for one project (the app: Sales › Orders). Paying unlocks what they
-bought at once: every investor that fits the project's interests. Then the desk owes them a
-**List** in that project: the `targetFirms` investors (200 unless the desk set otherwise) that fit
-their brief best, each checked and with a primary contact, **within 48 hours** (`dueAt`). Marking
-the order delivered with that List is what emails the customer a link to it. This command does that
-work.
+licence (`offer: licence`) for one project (the app: Sales › Orders). Paying unlocks every investor
+that fits the project at once. Then the desk owes them a **List** in that project: at least
+`targetFirms` (200 unless the desk set otherwise) investors that fit their brief best, each checked,
+with two or three people to write to and a note saying why it is there, **within 48 hours**
+(`dueAt`). Marking the order delivered with that List emails the customer a link to it.
 
-Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` first. The research and filing are
-those of `/yt:investors find` (the `yt` plugin, steps 4 to 7), run for the
-order's project.
+This is the most valuable thing the desk makes, and the customer pays for its quality. Read, before
+anything else:
+
+- `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` — every rule; §5 for contact details.
+- `${CLAUDE_PLUGIN_ROOT}/skills/fulfil-orders/references/research-standard.md` — the bar: the
+  investor profile, where candidates come from, the scorecard and red flags, the three checks,
+  what each firm carries, the two signals and the note.
+- `${CLAUDE_PLUGIN_ROOT}/skills/fulfil-orders/references/verification.md` — the dossier and the
+  verifier.
+- `${CLAUDE_PLUGIN_ROOT}/skills/signals/references/research-an-investor.md` — how a firm's fields
+  and tags are filled, and `what-is-a-signal.md` beside it.
+- `${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md` — the enrichment connectors.
 
 ## Arguments
 
 - **order number** (`1001`): that order only. Without one, the open queue, soonest due first.
-- `--all`: every open order in this run. Without it, one order per run, so a scheduled run never
-  outlasts its slot.
-- `--deliver`: deliver without asking when an order reaches its target. **Unattended runs pass it**
-  (below); by hand, the command asks first.
-- `--check`: report the queue (number, customer, due, firms now against target) and write nothing.
+- `--all`: every open order in this run. Without it, one order per run.
+- `--deliver`: deliver without asking when the List reaches its target, and file without cards
+  (house rules §2, the scheduled research). **Unattended runs pass it.** By hand, without it, every
+  write is a card.
+- `--check`: report the queue (number, customer, due, firms on the List against target) and write
+  nothing.
+- `--batch N`: the most firms to research and verify in this run (default 60). A run stops at the
+  end of a batch so a scheduled run never outlasts its slot; the next run continues the same order.
 
 ## Tools
 
 | Tool | Used for | Writes |
 | --- | --- | --- |
 | `whoami` | step 1: platform admins only | no |
-| `list_orders` | step 2: the open queue (`open: true`), or one by `number` | no |
-| `get_order` | steps 3, 4 and 6: the order, its `brief` and the buyer's `targeting`, and `firmsNow`, its progress towards `targetFirms` | no |
-| `update_order` | step 3: `in_progress` (assigns you); step 5: the `listId`; step 8: `delivered` with the List and a `deliveryNote`, or a `deskNote` | yes |
-| `get_project`, `list_tags` | step 4: today's interests, to compare with the order's frozen `brief` | no |
-| `list_lists`, `create_list`, `get_list` | steps 5 and 7: the List this order delivers | yes, the List |
-| `list_prospects` | step 6: the catalog's fits for the project, best first | no |
-| `add_many_to_list` | step 6: the chosen firms, each with a suggested primary contact | yes |
-| `file_investor` | step 6: new firms from research, as `/yt:investors find` step 7 files them | yes, only on a clean dry run |
-| `show_results` | output: the order as a card (`get_order`) | no |
+| `list_orders`, `get_order` | steps 2–3: the queue, the order, its `brief`, `targeting`, `listId`, `firmsNow` | no |
+| `update_order` | step 3 `in_progress`; step 5 `listId`; step 11 desk note; step 13 `delivered` | yes |
+| `get_project`, `list_tags`, `get_company_kind` | step 4: today's interests, the tag tree, the investor fields | no |
+| `list_lists`, `create_list`, `get_list` | steps 5, 6 and 12: the List | yes, the List |
+| `list_research_checks`, `create_research_checks` | steps 6 and 11: what earlier runs did and rejected; this run's record | yes, the log |
+| `list_prospects`, `list_companies`, `search_companies`, `get_company`, `search_people` | steps 7–8: the catalog's candidates and dedup | no |
+| `list_signals` | step 8: signals already on file for each firm and person | no |
+| `find_email`, `verify_email`, `domain_search`, `enrich_person`, `get_enrichment` | steps 8–9: people and their contact details | no |
+| `file_investor` | step 10: new firms with their people; empty fields and new people on catalog firms | yes, dry run first |
+| `file_signal` | step 10: the firm and person signals not already on file | yes, dry run first |
+| `add_many_to_list` | step 10: the firms, with `primaryPersonIds` and `notes` (why it is here) | yes |
+| `update_list_entry`, `remove_from_list` | step 12: a corrected note or primary; a firm that failed the final pass | yes |
+| `show_results` | output: the order (`get_order`) | no |
 
 ## Steps
 
 1. **Platform admins only.** `whoami`; if `isPlatformAdmin` is false, say orders are the Yellowtail
    team's and stop.
 2. **Find the work.** With a number, `list_orders` with `number`. Otherwise `list_orders` with
-   `open: true` (soonest due first). Nothing open: say "No orders waiting" and stop. A scheduled run
-   stops here quietly almost every time, which is the point. With `--check`, report the queue and
-   stop.
-3. **Pick it up.** Take the first open order (or each, with `--all`). Skip one that is `in_progress`
-   and assigned to someone else, unless it was named or is overdue: say who has it. Otherwise
-   `update_order` with `status: in_progress` (it assigns you if nobody is assigned), then `get_order`
-   for `firmsNow`, `targetFirms`, `projectName` and the desk's note.
-4. **Read the brief.** The order's `brief` is what the customer paid for, frozen at purchase: the
-   project's name, description and website, and its interests by tag kind (sector, stage,
-   geography). Prospect for **those** interests, even if the project has changed since: they are
-   the criteria, and the tags every new firm must carry to count. (A command copied from Sales ›
-   Orders carries the same brief as text.) Read the website for anything the description leaves
-   out. `get_project` gives today's interests (`interestTagIds`), and `list_tags` names them: if they
-   differ from the brief, say so in the desk's note, and keep to the brief. An order with an empty
-   brief (made before briefs were recorded) uses the project as it is. Never create a tag here
-   (house rules §12).
+   `open: true`. Nothing open: say "No orders waiting" and stop. With `--check`, report and stop.
+3. **Pick it up.** The first open order (each, with `--all`). Skip one `in_progress` and assigned to
+   someone else unless it was named or is overdue: say who has it. Otherwise `update_order` with
+   `status: in_progress` (it assigns you), then `get_order`. **An upgrade** (a licence order already
+   delivered, its desk note naming the list order) has nothing to build: skip it.
+4. **Write the investor profile** (research-standard §1) from the order's `brief` (frozen at
+   purchase: prospect for those interests even if the project changed since; say so in the desk
+   note if `get_project` differs) and the buyer's `targeting`, which narrows, never widens. Read
+   the startup's website. Find its comparable startups and their investors. An empty brief (an old
+   order) uses the project as it is. Never create a tag (house rules §12).
+5. **The List.** If the order has a `listId`, keep filling it. Otherwise `list_lists` for the project
+   (a run that stopped leaves one named for this order), else `create_list` named
+   `Your top <targetFirms> investors`, described `Picked and checked by the Yellowtail team for
+   order #<number>, <date>.`, and `update_order` with its `listId` at once.
+6. **Resume.** `get_list` for the firms already on it (done), and `list_research_checks` for the
+   project for earlier runs of this order (`details.order`), with the firms they rejected. Open the
+   working folder (research-standard §7) if this machine has it. Skip done and rejected firms.
+7. **Build the pool and score it** (research-standard §2–3): the catalog first, then the web, to at
+   least twice what the List still needs. Score each candidate; drop gate failures and red flags
+   with the reason. Rank the rest. In parallel subagents where the client has them, one source or
+   one slice of the pool each.
+8. **Research the next batch** (`--batch`, best-ranked first): a dossier per firm
+   (`verification.md`), with the firm's own details, its two or three people and every contact
+   field, enrichment for what the web did not give, the firm and person signals (reuse anything on
+   file from the last six months first), and the note. Subagents in parallel, about ten firms each,
+   where the client has them.
+9. **Verify the batch** with the verifier (`verification.md`), never the agent that researched it.
+   PASS and fixed-and-rechecked firms go on; FAILs are rejected with the reason.
+10. **File and add.** For each passing firm, in this order:
+    - **New firm:** `file_investor` dry run with the firm (its fields, tags, attributes including
+      `twitter_url`, `general_email`, `phone`), its people with sources and statuses, and a profile
+      note whose first line is `Auto-filed by /fulfil-orders, unreviewed`, then which order it was
+      found for, then each value's source. Strong duplicates block it (house rules §4): by hand, a
+      question; unattended, treat it as the existing firm only if domain or LinkedIn match exactly,
+      otherwise reject it for the desk to look at.
+    - **Catalog firm:** `file_investor` with `company: { id, fill }` for empty fields only (never
+      `change` unattended), and its new people. A `verified` value is never touched.
+    - **Signals:** `file_signal` dry run, then filed, for each signal the dossier says to file.
+    - **The List:** `add_many_to_list` in batches of up to 50, with `companyIds`, `primaryPersonIds`
+      (each firm's first person) and `notes` (each firm's note, keyed by company id).
 
-   Then read the buyer's **targeting** on the order (`get_order`, `targeting`), their own answers
-   from the purchase welcome, all optional: how much they are raising (`raiseSize`), whether they
-   have a lead (`lead`), the investor types and regions they want (`investorTypes`,
-   `geographies`, by name) and a note. They narrow the brief, never widen it past its interests:
-   - **Investor types and regions** they picked go first: fill the List from firms carrying them
-     before any others, and say in the desk's note if they ran short.
-   - **Raise size** decides cheque size: skip firms whose typical cheque is plainly far from it.
-   - **No lead yet** means firms that lead rounds come first; **has a lead** means followers.
-   - **The note** is read as the customer's own words: follow it where it fits the brief, and say
-     in the desk's note where it could not be.
-   No `targeting` (they skipped the questions, or the order predates them) means the brief alone.
-5. **Make the List.** The deliverable is a List in the customer's project, holding the
-   `targetFirms` (200) investors that fit the brief best (Perry, 3 Nov 2026), not the whole catalog,
-   which paying has already unlocked for them. If the order names a list already (`listId`, from an
-   earlier run), keep filling that one. Otherwise `list_lists` for the project (a run that stopped
-   halfway leaves one named for this order), else `create_list` in the project named
-   `Your top <targetFirms> investors` with the description `Picked and checked by the Yellowtail team
-   for order #<number>, <date>.` Record its id on the order straight away (`update_order` with
-   `listId`), so a later run finds it.
-6. **Fill it with the best fits.** `list_prospects` for the project gives the catalog's investors
-   that match its interests and are on none of its lists, best fit first (`fit.band`,
-   interests matched, recent signals, `bestContact`). Take the strong and good fits that match the
-   brief, skipping any that look inactive (no investment in two years) or plainly off-thesis, and
-   add them with `add_many_to_list` (`companyIds`; each gets a suggested primary contact) in
-   batches of 50. While the List is short of the target, run `/yt:investors find` steps 5 to 7 for this
-   project to find firms Yellowtail lacks (about 25 a batch), filing each kept firm exactly as
-   `/yt:investors find` files them (firm only, existing tags including the brief's interest tags,
-   `file_investor` dry run first, a profile note starting `Auto-filed by /find-investors,
-   unreviewed`), then add those to the List too. Stop at the target, or when a research batch keeps
-   fewer than 5 new firms: padding with weak fits is worse than an honest shortfall. Never put a
-   possible-fit or may-be-inactive firm on the List to reach the number.
-7. **Pass over it.** `get_list` and read it top to bottom as the customer will: every firm fits the
-   brief, every firm has a primary contact (a firm with nobody goes in the desk's note; contacts are
-   added with `/yt:investors contacts`, which files people on a card the user approves, so in a run by hand
-   offer it for the strongest firms with nobody, and an unattended run lists them instead).
-8. **Deliver, or say why not.**
-   - **The List has `targetFirms` firms:** write a `deliveryNote`, one honest line for the customer
-     about what was done ("We added 64 investors backing seed-stage climate software in Europe."): no
-     prices, no promise of investment, nothing internal. By hand, show the order and the List and ask
-     "Deliver order #N and email <buyer> now?"; with `--deliver`, don't ask. Then `update_order` with
-     `status: delivered`, the `listId`, the `deliveryNote` and a `deskNote` that keeps the existing
-     note and adds one line ("3 Nov: List of 200 built, 64 filed unreviewed; 12 firms with no
-     contact."). The customer's email opens the List. Read `email`: `queued` is on its way;
-     `disabled` means email is off on the server, so tell the user to email the customer themselves.
-   - **Short of the target:** don't deliver. `update_order` with a `deskNote` that says where the List
-     got to and why (the count, what was searched, what ran dry), and tell the user. The order stays
-     in progress for a person to decide: deliver what there is, lower `targetFirms`, or widen the
-     search. An overdue order shows red on the desk's page.
-   - **An upgrade** (an order for the licence that is already delivered, with a desk note naming
-     the list order) has nothing to build: skip it.
+    By hand without `--deliver`, show the batch as cards first (one compact card per firm: the
+    score, the gates' evidence, people, signals and the note) and write on approval.
+11. **Record the run.** `create_research_checks` with one `prospecting` check for the project:
+    `found` = firms added to the List this run, `summary` one sentence, and `details`
+    `{ order: <number>, profile, added: [ids], filedNew: [ids], signals: [ids], rejected: [{ name,
+    companyId?, reason }] }`. Then `update_order` with a `deskNote` keeping the old note and adding
+    one line ("15 Nov: +58 (31 new, 27 catalog), 41 rejected; 176/200").
+12. **Final pass** once the List holds the target: `get_list` and read it top to bottom as the
+    customer will. Every firm fits, has a note and a primary contact with a way to reach them; the
+    balance holds (research-standard §3); no two notes are the same text. Re-verify one passed firm in
+    ten (`verification.md` § Deciding). A firm that fails now is removed (`remove_from_list`) and
+    replaced from the pool.
+13. **Deliver, or say why not.**
+    - **The List holds at least `targetFirms` and passed step 12:** write a `deliveryNote`, one
+      honest line for the customer ("We picked 212 investors backing seed-stage industrial
+      decarbonisation in the UK and Europe; each has a note on why, and the partner to write to."):
+      no prices, no promise of investment, nothing internal. By hand, show the order and the List and
+      ask "Deliver order #N and email <buyer> now?"; with `--deliver`, don't ask. Then `update_order`
+      with `status: delivered`, the `listId`, the `deliveryNote` and a final `deskNote` line. Read
+      `email`: `queued` is on its way; `disabled` means email is off on the server, so tell the user
+      to email the customer themselves.
+    - **Short, and the pool still has candidates:** stop at the batch's end. The next run continues.
+    - **Short, and the pool is exhausted** (two research rounds that each keep fewer than ten firms):
+      don't deliver and don't pad. `deskNote` says where it got to and what ran dry, and the report
+      says so: a person decides to deliver what there is, lower `targetFirms`, or widen the brief
+      with the customer.
+    - **Due within 12 hours and more than 30 firms short:** say so in the desk note and the report,
+      every run, so a person can step in before it goes red.
 
 ## Running it on a schedule
 
-The point of this command is that orders get picked up without anyone watching the inbox. The desk
-is also emailed about each new order (`DESK_ALERT_EMAIL`), so a person can always step in.
+Hourly, with the Yellowtail Admin connector signed in as a platform admin:
 
-- **Claude Desktop:** a scheduled task, hourly, with the prompt `/yt-admin:fulfil-orders --deliver`, on a
-  machine that stays awake, with the Yellowtail Admin connector signed in as a platform admin.
+- **Claude Desktop:** a scheduled task with the prompt `/yt-admin:fulfil-orders --deliver`, on a
+  machine that stays awake.
 - **Claude Code:** `/loop 1h /yt-admin:fulfil-orders --deliver`, or `/schedule` for a cloud routine.
 
-An unattended run never asks, so it never waits: it delivers only an order that reached its target,
-and leaves everything else in progress with a note.
+An order of 200 takes several runs (60 firms researched and verified per run by default). Each run
+picks up where the last stopped (step 6), so the order is delivered within its 48 hours without
+anyone watching. An unattended run never asks: it delivers only a List that reached its target and
+passed the final pass.
 
 ## Output
 
-Display: inline — per order: its number, customer and project, the List's firms against the target,
-how many were filed new (by name, in a run by hand), what was flagged, and whether it was
-delivered and the email queued, or why not. One `show_results` card for an order delivered or left
-short (`get_order`). A scheduled run with nothing to do says only "No orders waiting".
+Display: inline — per order: its number, customer and project, the List against the target, this
+run's added (catalog and new), people filed, signals reused and filed, rejected with the top reasons,
+emails verified, and whether it was delivered and the email queued, or what is next and when it is
+due. One `show_results` card for the order (`get_order`). A scheduled run with nothing to do says
+only "No orders waiting".
 
 ## What comes next
 
-- The customer gets "Your investor list is ready", which opens the List.
-- Review the auto-filed firms in `/catalog-hygiene`.
+- The customer gets "Your investor list is ready", which opens the List with each firm's note.
+- `/catalog-hygiene` lists the firms filed `Auto-filed by /fulfil-orders, unreviewed`, and any the
+  run flagged as dead or off-thesis.
 - An order left short is on Sales › Orders for a person to decide.

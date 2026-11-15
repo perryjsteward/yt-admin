@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.5.0 (15 Nov 2026)
+
+- **`/fulfil-orders` works to a research standard** (Perry, 15 Nov 2026: "these firms and people have
+  to be worth the money"). New references `skills/fulfil-orders/references/research-standard.md`
+  and `verification.md`. Each order now: an investor profile written from the brief and targeting,
+  with comparable startups and who backed them; a pool of twice the target from the catalog and
+  up-to-date web research (comparables' investors, recent deals, fund closes, thesis pages); a
+  scorecard with four gates (live in 12 months, on thesis, stage, geography) and red flags; a
+  dossier per firm, checked three ways (fit, live, contacts) by a verifier that did not research
+  it; two or three people per firm with every contact field, Hunter and Lemlist for what the web
+  did not give, emails verified; the firm's website, LinkedIn, X, general email and phone; one firm
+  signal and one person signal, reusing any on file from the last six months; and a note per firm,
+  shown on the customer's List as "Why it's here", added with `add_many_to_list`'s new `notes`. The
+  List is 200 or more, never padded; runs are resumable (`--batch`, default 60 firms a run) through
+  the research log, and a final pass re-verifies one firm in ten before delivery.
+- **`/requests`**, new: the access-request queue. Reads each request and the startup, recommends
+  approve, contacted, decline or delete, and acts on approval: a Raise yes with the new
+  `approve_raise_request` (a project in the Raise workspace and a guest invite), a software yes as
+  `/invite-founder` does with `accessRequestId`. Needs the app's `get_access_request` and
+  `approve_raise_request` tools.
+- House rules §2 (synced to `yt` 0.12.2 and `yt-raise` 0.15.2): the unattended order run is the
+  fifth thing that files without a card, and says exactly what it may file. New marker `Auto-filed
+  by /fulfil-orders, unreviewed`, which `/catalog-hygiene` now lists.
+
 ## 0.4.2 (15 Nov 2026)
 
 - House rules synced with `yt` 0.12.1: §12 says customers on Yellowtail Club never create tags

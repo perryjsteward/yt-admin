@@ -47,8 +47,9 @@ Yellowtail team, and pointed at `/yt:pipeline hygiene` for their own project.
    often resolves itself (both now sit at the keeper: list them again). What is left is a checklist
    for the admin panel, with the keeper suggested; never `delete_person` from here.
 8. **Unreviewed firms.** `search_notes { scope: "all", q: "unreviewed" }`, all pages, keeping the
-   notes whose first line is `Auto-filed by /find-investors, unreviewed` or `Auto-filed by
-   /prospecting, unreviewed`: the firms those filed without a card. Report the count and list them
+   notes whose first line is `Auto-filed by /find-investors, unreviewed`, `Auto-filed by
+   /prospecting, unreviewed` or `Auto-filed by /fulfil-orders, unreviewed`: the firms those filed
+   without a card. Report the count and list them
    (firm, filed when, for which workspace) after the duplicates, each pointing at
    `/yt:investors research` (enrich) or a merge if it is also in a group above. Checking one is
    enriching it; once it is right, `update_note` drops the first line. Read-only here.

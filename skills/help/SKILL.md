@@ -17,7 +17,8 @@ Answer the question asked from the sections below, naming the command. With no q
 
 | Ask for | Command |
 | --- | --- |
-| Work the order queue: build and deliver each paid project's List of 200 | `/fulfil-orders` |
+| Work the order queue: research, triple-check and deliver each paid project's List of 200+, every firm with 2-3 people, signals and a note on why | `/fulfil-orders` |
+| Access requests from the site: approve Raise (project + guest invite) or software (join invite), mark contacted, decline | `/requests` |
 | Invite a founder you met to make a free account, after checking the catalog fits them | `/invite-founder` |
 | Turn event notes, posts, transcripts or a CSV into reviewed signals and firms; import a list of investors | `/signals intake` |
 | Scan subscribed customers' investors for new signals, daily | `/signals scan` |

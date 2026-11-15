@@ -44,7 +44,8 @@ client too: the research skills find and use them, and run on the web alone with
 | Command | What it does |
 | --- | --- |
 | `/help` | Which command for what |
-| `/fulfil-orders` | Work the order queue; build and deliver each project's List of 200 |
+| `/fulfil-orders` | Work the order queue: the investor profile, a pool from the catalog and fresh research, every firm triple-checked by a separate verifier, 2–3 people each with verified contacts, a firm and a person signal, a note on why; deliver the List of 200+ |
+| `/requests` | Access requests from the site: approve Raise (project in the Raise workspace + guest invite) or software (join invite after a catalog check), mark contacted, decline |
 | `/invite-founder` | Invite a founder to a free account after a catalog check |
 | `/signals` | Everything signals, one command: `intake` (event notes, posts, transcripts or a CSV into reviewed signals and firms), `scan` (daily: the next 50 subscribed customers' investors, LinkedIn and X through Apify when connected, 1–2 signals each published), `backfill` (investors' announced deals) |
 | `/catalog-hygiene` | Duplicates across the catalog, merged on approval; unreviewed auto-filed firms |
