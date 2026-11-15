@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.2 (15 Nov 2026)
+
+- House rules synced with `yt` 0.12.1: §12 says customers on Yellowtail Club never create tags
+  (they ask the team), and the desk creates approved ones on Yellowtail Admin as the new
+  `references/new-tags.md` says (create first, its group as parent, alongside the parent,
+  `created: false`, and customers' requests).
+
 ## 0.4.1
 
 - **`yt`'s commands are nine areas with actions** (`yt` 0.12.0): every `/yt:` command named here

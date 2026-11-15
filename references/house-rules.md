@@ -213,7 +213,7 @@ failed and why, then follow-ups for the user. Never claim a write that a tool di
 
 ## 12. A missing tag is proposed, not skipped
 
-When a source supports a tag that isn't in `list_tags`, the card proposes it rather than leaving the
+When a source supports a tag that isn't in `list_tags`, the card names it rather than leaving the
 firm (or signal, or project) under-tagged.
 
 1. **Check it really is missing.** `list_tags` for the kind, then look for the same tag under
@@ -242,40 +242,33 @@ firm (or signal, or project) under-tagged.
 2. **Pick the kind** from `get_company_kind`'s tag kinds for the company's kind (a signal may use any
    kind). A new industry tag always names its group as parent (the real tree, from
    `list_tags { kind: "industry" }`).
-3. **Put it on the card** as its own line, so it is approved or rejected with the card:
+3. **Put it on the card** as its own line, so the user sees it with the card:
 
    ```
-   - New tag · industry · "Industrial AI" (parent: AI & data) — quarrylane.vc/thesis: "robotics
-     and industrial AI" · near misses: Deep Tech (focus; broader, not a sector)
+   - Tag to add · industry · "Industrial AI" (parent: AI & data) — quarrylane.vc/thesis: "robotics
+     and industrial AI" · near misses: Deep Tech (focus; broader, not a sector) · filed under: AI & data
    ```
 
-   Kind, name, parent if any, why (the source sentence), and the existing tags you ruled out.
-   On the card these lines sit under **New tags (created on approve)**.
-4. **On approval** (`approve` on the card, or the tag line itself), call `create_tag`
-   (`{ kind, name, parentId?, slug? }`) **first**, then put the returned id in the same card's
-   bundle (`tagIds`, `tags.add`, a signal's `tags`, or the project's interests) and file. Approving
-   the card is the explicit request `create_tag` needs.
-   - **Anyone** may create `industry` tags (`parentId` is required: the group, from `list_tags`) and
-     `focus` tags. Other kinds (stage, geography, investor type, …) are the Yellowtail team's:
-     platform admins may create any kind.
-   - **Alongside its parent, never instead.** A firm given a new specific tag keeps (or also gets)
-     the broad tag above it: "Industrial AI" goes on next to "AI & data", not in its place. Other
-     firms don't carry the new tag yet, so matching on the broad one must keep working.
-   - `created: false` means the kind already had that tag (another case, plural or spelling): use
-     the returned tag's id, and say so in the report ("used existing Farm robotics").
-   - **Refused** (another kind, and not an admin): file the card without it and list it in the
-     report under **Tags to ask the Yellowtail team for** (kind, name, the firm and the source),
-     suggesting the user mentions them to the team. Nothing tells the team on its own.
-   - Don't propose a kind the user can't create as a "created on approve" line: put it straight
-     under **Tags to ask the Yellowtail team for**.
-5. A user can approve the card but not the tag (`1: no new tag`): don't create it, and file the card
-   without it.
+   Kind, name, parent if any, why (the source sentence), the existing tags you ruled out, and the
+   existing tag the firm is filed under meanwhile (the nearest one that is true, usually the parent).
+4. **Who adds it depends on the connector** (Perry, 15 Nov 2026). The shared taxonomy is the
+   Yellowtail team's:
+   - **Yellowtail Club** (customers): nobody here adds tags. On the card these lines sit under
+     **Tags to ask the Yellowtail team for**; the card files with the nearest existing tag, and the
+     report lists the missing tags again (kind, name, the firm and the source), suggesting the user
+     mentions them to the team. Nothing tells the team on its own.
+   - **Yellowtail Admin** (the desk and the Raise team): the lines sit under **New tags (created on
+     approve)**, and on approval the tag is created first and filed with the card, as your plugin's
+     `references/new-tags.md` says. A new specific tag always goes on **alongside its parent**,
+     never instead, so matching on the broad tag keeps working for every firm.
+5. A user can approve the card but not the tag (`1: no new tag`): leave it out, and file the card
+   with the nearest existing tag.
 
-Never create a tag the user didn't see on a card, never create one to stand in for a mapping you
-weren't sure of, and never leave a firm under-tagged because the gate said no: the nearest existing
-tag goes on instead. A new firm with no tags at all is refused by `file_investor` / `file_account`,
-and their dry run's `tagGaps` names each applicable kind still empty, which the card shows as not
-stated with where you searched.
+Never add a tag the user didn't see on a card, never add one to stand in for a mapping you weren't
+sure of, and never leave a firm under-tagged because the gate said no or the tag is not there yet:
+the nearest existing tag goes on instead. A new firm with no tags at all is refused by
+`file_investor` / `file_account`, and their dry run's `tagGaps` names each applicable kind still
+empty, which the card shows as not stated with where you searched.
 
 ## 13. How results look
 
