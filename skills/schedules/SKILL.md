@@ -16,7 +16,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` §2 (the desk's scheduled
 
 | Task | Prompt | When | What it does |
 | --- | --- | --- | --- |
-| Orders | `/yt-admin:fulfil-orders --deliver` | hourly | Researches, verifies and delivers each open order's List of 200+, 60 firms a run |
+| Orders | `/yt-admin:fulfil-orders --deliver` | hourly | Researches, verifies and delivers each open order's List of 200+, 60 firms a run; run it on Sonnet 5.5 (about $10 an order) |
 | Prospecting | `/yt-admin:prospecting --unattended` | daily, 06:00 | New investor firms (and their people) for the next 5 paying projects |
 | Lead enrichment | `/yt-admin:lead-enrichment --unattended` | daily, 07:00 | Public details for the next 25 firms and 25 people; enrichment connectors and Lemlist for the rest |
 | Signal scan | `/yt-admin:signals scan --unattended` | daily, 08:00 | The next 50 subscribed customers' investors scanned (LinkedIn and X through Apify when connected); 1–2 signals each, published |

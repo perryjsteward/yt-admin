@@ -34,7 +34,8 @@ their round, date and investors, and source each line.
 
 ## 2. Where candidates come from
 
-Build a **pool of at least twice the target** (400 for 200) before choosing, from all of these:
+Build a **pool of about 1.3× the target** (260 for 200) before choosing, catalog first, within the
+order's search budget (`budget.md`: about 60 searches for the pool, each naming many firms):
 
 1. **The catalog.** `list_prospects` for the project, every page, `strong` and `good` bands. Then
    `list_companies` with the profile's tag facets for firms `list_prospects` ranked lower but that
@@ -92,7 +93,8 @@ each is a real fit on its own (name both in the notes).
 ## 4. The three checks (every firm, by someone other than its researcher)
 
 A firm goes on the List only after **three independent checks** pass, each from sources, never
-from memory. The researcher builds the dossier; a **verifier** (another subagent where the client
+from memory. Complete catalog firms take the light path (`budget.md`): the same three checks,
+answered mostly from Yellowtail. The researcher builds the dossier; a **verifier** (another subagent where the client
 has them, see `verification.md`) re-does each check from the sources and from fresh searches,
 trying to prove the dossier wrong.
 
@@ -127,14 +129,15 @@ who leads this sector or stage, a second partner or principal who covers it, the
 who runs the firm's deal flow (a platform or investment team member who takes first meetings).
 Not the fund's CFO, LPs, operating partners who don't invest, or a junior analyst when a partner
 covers the sector. A two-person fund has two. Each person gets the five contact fields of house
-rules §5, then enrichment for what the web did not give:
+rules §5, the contact tools first because they are cheap (`budget.md`), the web for what they miss:
 
-1. the web first: team page, their LinkedIn, their own site and posts;
-2. `find_email` (Hunter, by name and the firm's domain), then `verify_email`;
+1. `domain_search` on the firm's domain: its people, titles, LinkedIns and the address pattern;
+2. `find_email` (Hunter, by name and domain), then `verify_email`;
 3. `enrich_person` (Lemlist) for what is still missing: `findEmail`, `findPhone` (work only),
    `linkedin`, and `verifyEmail` for an address still unverified;
-4. `domain_search` on the firm's domain to find partners the team page left out, and the
-   address pattern (house rules §5 for when a pattern may be used).
+4. the firm's team page and the person's LinkedIn, fetched, for the role (does it cover this
+   sector?), current title and anything the tools did not give. Pattern inference only as house
+   rules §5 allows.
 
 Every value filed carries its source; only a deliverable check makes an email `verified`.
 

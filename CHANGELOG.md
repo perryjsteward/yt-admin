@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.1 (15 Nov 2026)
+
+- **An order costs about $10 of model spend** (Perry, 15 Nov 2026), in the new
+  `skills/fulfil-orders/references/budget.md`: Haiku 5.5 subagents read the web (research, five
+  firms each; the verifier, ten dossiers each), Sonnet 5.5 runs the order and spot-checks one passed
+  firm in twenty; never Opus. Caps per order: 200 web searches (60 for the pool, one per new firm,
+  none for catalog firms or the verifier), 260 firms researched, 10 spot-checks, counted across runs
+  in the research check's `details.spend`; a run at a cap with the List short does not deliver.
+  The catalog comes first, and complete catalog firms (website, LinkedIn, two verified emails, a
+  signal in six months) take a light path with no search. People come from `domain_search`,
+  `find_email`, `verify_email` and `enrich_person` before pages. The pool is 1.3× the target.
+- Run the hourly order task on Sonnet 5.5 (`/schedules`).
+
 ## 0.5.0 (15 Nov 2026)
 
 - **`/fulfil-orders` works to a research standard** (Perry, 15 Nov 2026: "these firms and people have

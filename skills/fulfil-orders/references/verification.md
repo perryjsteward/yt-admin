@@ -44,22 +44,23 @@ led Kelvin; she posted about process-heat electrification in October.
 
 ## The verifier
 
-Where the client has subagents, verification runs in **separate subagents from research**, a batch
-of up to ten dossiers each, several in parallel. The verifier gets the investor profile and the
-dossiers, never the researcher's reasoning, and this brief:
+Where the client has subagents, verification runs in **separate subagents from research**, on
+**Haiku 5.5** (`budget.md`), ten dossiers each, several in parallel. The verifier gets the investor
+profile and the dossiers, never the researcher's reasoning, and this brief:
 
 > You are checking another researcher's work before it goes to a paying customer. Assume each
 > dossier contains at least one mistake and find it. For every firm: open every URL and confirm it
-> says what the dossier claims, with the date; search for the firm's newest investment yourself and
-> compare; search for evidence against the fit (stopped investing, pivoted, partner left, fund
-> wound down); confirm each person's current title on LinkedIn or the firm's team page today; check
+> says what the dossier claims, with the date; open the firm's own portfolio, news or LinkedIn page
+> for its newest investment and compare; look there for evidence against the fit (stopped investing,
+> pivoted, partner left, fund wound down); confirm each person's current title on LinkedIn or the firm's team page today; check
 > each email with `verify_email` (or `enrich_person` with `verifyEmail`) unless it already shows a
 > deliverable check from today; and read the note as the founder will: is every fact in it in the
 > dossier, sourced and current? Return, per firm, PASS, FIX (with the exact corrections and their
-> sources) or FAIL (with the reason). Do not soften a FAIL. Write nothing to Yellowtail.
+> sources) or FAIL (with the reason). Do not soften a FAIL. Write nothing to Yellowtail. Fetch pages
+> directly; do not web search (searches are the order's scarcest budget).
 
 Without subagents, the same agent runs the verifier pass itself, **after** the whole batch is
-researched, from the dossiers alone, starting each firm with fresh searches rather than its notes.
+researched, from the dossiers alone, re-opening each firm's sources rather than trusting its notes.
 
 The verifier's answer is written into the dossier's last section:
 
@@ -82,6 +83,8 @@ Result: PASS after fix
   can review it in `/catalog-hygiene` (never delete or untag it here).
 - **Two FIX rounds** without a pass: rejected. A firm that needs three attempts to describe is not
   one to stake the List on.
-- A sample of **one firm in ten that passed** is re-verified by the run itself at the end (step 12),
-  with the same brief. Two failures in the sample mean the batch's verifier missed things: re-verify
-  that whole batch.
+- A sample of **one firm in twenty that passed** is re-verified by a **Sonnet 5.5** subagent (at most
+  10 an order, `budget.md`), with the same brief and one search allowed per firm. Two failures in a
+  batch's sample mean its verifier missed things: re-verify that whole batch on Haiku.
+- **Light-path firms** (`budget.md`) get a shorter check: the newest dated activity opened, each
+  person's current title confirmed, emails already `verified` left as they are.

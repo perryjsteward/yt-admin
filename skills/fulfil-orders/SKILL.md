@@ -1,6 +1,6 @@
 ---
 name: fulfil-orders
-description: Yellowtail Admin — Work the order queue. A customer who buys their investor list or the licence gets an order due in 48 hours. This picks up the next open order (or the one named), writes the investor profile from the brief and the buyer's targeting, builds a pool from the catalog and fresh web research, scores every firm, has each checked three ways (fit, live, contacts) by a verifier that did not research it, finds 2-3 people per firm with verified contacts (Hunter, Lemlist) plus the firm's website, LinkedIn, X, email and phone, makes sure each has a recent firm and person signal (reusing ones on file), fills a List in the customer's project with the 200+ that pass, each noted with why it is there, and delivers the order, which emails the customer. Resumable; runs unattended hourly or by hand. Use for "fulfil orders", "deliver order 1001", "work the order queue", "any orders waiting", or a scheduled task.
+description: Yellowtail Admin — Work the order queue. A customer who buys their investor list or the licence gets an order due in 48 hours. This picks up the next open order (or the one named), writes the investor profile from the brief and the buyer's targeting, builds a pool from the catalog and fresh web research, scores every firm, has each checked three ways (fit, live, contacts) by a verifier that did not research it, finds 2-3 people per firm with verified contacts (Hunter, Lemlist) plus the firm's website, LinkedIn, X, email and phone, makes sure each has a recent firm and person signal (reusing ones on file), fills a List in the customer's project with the 200+ that pass, each noted with why it is there, and delivers the order, which emails the customer. About $10 of model spend an order (Haiku reads, Sonnet runs it). Resumable; runs unattended hourly or by hand. Use for "fulfil orders", "deliver order 1001", "work the order queue", "any orders waiting", or a scheduled task.
 argument-hint: "[order number] [--all] [--deliver] [--check] [--batch N]"
 ---
 
@@ -13,7 +13,8 @@ that fits the project at once. Then the desk owes them a **List** in that projec
 with two or three people to write to and a note saying why it is there, **within 48 hours**
 (`dueAt`). Marking the order delivered with that List emails the customer a link to it.
 
-This is the most valuable thing the desk makes, and the customer pays for its quality. Read, before
+This is the most valuable thing the desk makes, and the customer pays for its quality: killer
+investors and data that is true today, for about $10 of model spend an order. Read, before
 anything else:
 
 - `${CLAUDE_PLUGIN_ROOT}/references/house-rules.md` — every rule; §5 for contact details.
@@ -22,6 +23,9 @@ anything else:
   what each firm carries, the two signals and the note.
 - `${CLAUDE_PLUGIN_ROOT}/skills/fulfil-orders/references/verification.md` — the dossier and the
   verifier.
+- `${CLAUDE_PLUGIN_ROOT}/skills/fulfil-orders/references/budget.md` — **$10 of model spend per
+  order of 200**: Haiku reads the web, Sonnet runs the order, the caps (200 searches, 260 firms
+  researched, 10 spot-checks), the light path for complete catalog firms, and how spend is counted.
 - `${CLAUDE_PLUGIN_ROOT}/skills/signals/references/research-an-investor.md` — how a firm's fields
   and tags are filled, and `what-is-a-signal.md` beside it.
 - `${CLAUDE_PLUGIN_ROOT}/references/research-connectors.md` — the enrichment connectors.
@@ -77,19 +81,23 @@ anything else:
    `Your top <targetFirms> investors`, described `Picked and checked by the Yellowtail team for
    order #<number>, <date>.`, and `update_order` with its `listId` at once.
 6. **Resume.** `get_list` for the firms already on it (done), and `list_research_checks` for the
-   project for earlier runs of this order (`details.order`), with the firms they rejected. Open the
-   working folder (research-standard §7) if this machine has it. Skip done and rejected firms.
-7. **Build the pool and score it** (research-standard §2–3): the catalog first, then the web, to at
-   least twice what the List still needs. Score each candidate; drop gate failures and red flags
-   with the reason. Rank the rest. In parallel subagents where the client has them, one source or
-   one slice of the pool each.
+   project for earlier runs of this order (`details.order`), with the firms they rejected and the
+   spend so far (`details.spend`, budget.md § Keeping count). Open the working folder
+   (research-standard §7) if this machine has it. Skip done and rejected firms.
+7. **Build the pool and score it** (research-standard §2–3): the catalog first (no searches: its
+   data is already here), then the web with searches that each name many firms (budget.md), to
+   about 1.3× what the List still needs. Score each candidate from what is known; drop gate
+   failures and red flags with the reason. Rank the rest, and mark the catalog firms that take the
+   light path (budget.md).
 8. **Research the next batch** (`--batch`, best-ranked first): a dossier per firm
    (`verification.md`), with the firm's own details, its two or three people and every contact
    field, enrichment for what the web did not give, the firm and person signals (reuse anything on
-   file from the last six months first), and the note. Subagents in parallel, about ten firms each,
-   where the client has them.
-9. **Verify the batch** with the verifier (`verification.md`), never the agent that researched it.
-   PASS and fixed-and-rechecked firms go on; FAILs are rejected with the reason.
+   file from the last six months first), and the note. **Haiku subagents, five firms each, in
+   parallel**; at most one search per new firm and none for a catalog firm; known URLs fetched instead. Light-path firms are built
+   from Yellowtail without research. This run reads the dossiers, never the pages.
+9. **Verify the batch** with **Haiku verifier subagents** (`verification.md`), ten dossiers each,
+   never the ones that researched them. PASS and fixed-and-rechecked firms go on; FAILs are rejected
+   with the reason. Then a **Sonnet spot-check** of one passed firm in twenty (at most 10 an order).
 10. **File and add.** For each passing firm, in this order:
     - **New firm:** `file_investor` dry run with the firm (its fields, tags, attributes including
       `twitter_url`, `general_email`, `phone`), its people with sources and statuses, and a profile
@@ -108,13 +116,15 @@ anything else:
 11. **Record the run.** `create_research_checks` with one `prospecting` check for the project:
     `found` = firms added to the List this run, `summary` one sentence, and `details`
     `{ order: <number>, profile, added: [ids], filedNew: [ids], signals: [ids], rejected: [{ name,
-    companyId?, reason }] }`. Then `update_order` with a `deskNote` keeping the old note and adding
-    one line ("15 Nov: +58 (31 new, 27 catalog), 41 rejected; 176/200").
+    companyId?, reason }], spend: { searches, researched, verified, spotChecks, runs } }` (spend is
+    the order's running total). Then `update_order` with a `deskNote` keeping the old note and adding
+    one line ("15 Nov: +58 (31 new, 27 catalog), 41 rejected; 176/200; 240 searches, 151
+    researched").
 12. **Final pass** once the List holds the target: `get_list` and read it top to bottom as the
     customer will. Every firm fits, has a note and a primary contact with a way to reach them; the
     balance holds (research-standard §3); no two notes are the same text. Re-verify one passed firm in
-    ten (`verification.md` § Deciding). A firm that fails now is removed (`remove_from_list`) and
-    replaced from the pool.
+    twenty (`verification.md` § Deciding), counted in the spot-check cap. A firm that fails now is
+    removed (`remove_from_list`) and replaced from the pool.
 13. **Deliver, or say why not.**
     - **The List holds at least `targetFirms` and passed step 12:** write a `deliveryNote`, one
       honest line for the customer ("We picked 212 investors backing seed-stage industrial
@@ -125,6 +135,9 @@ anything else:
       `email`: `queued` is on its way; `disabled` means email is off on the server, so tell the user
       to email the customer themselves.
     - **Short, and the pool still has candidates:** stop at the batch's end. The next run continues.
+    - **Short, and a budget cap reached** (budget.md): don't deliver and don't keep spending. The desk
+      note says how far it got and that the order's budget is spent, so a person decides whether to
+      spend more, deliver what there is, or lower `targetFirms`.
     - **Short, and the pool is exhausted** (two research rounds that each keep fewer than ten firms):
       don't deliver and don't pad. `deskNote` says where it got to and what ran dry, and the report
       says so: a person decides to deliver what there is, lower `targetFirms`, or widen the brief
@@ -140,7 +153,9 @@ Hourly, with the Yellowtail Admin connector signed in as a platform admin:
   machine that stays awake.
 - **Claude Code:** `/loop 1h /yt-admin:fulfil-orders --deliver`, or `/schedule` for a cloud routine.
 
-An order of 200 takes several runs (60 firms researched and verified per run by default). Each run
+Run the scheduled task on **Sonnet 5.5**: it orchestrates, and its subagents read the web on Haiku
+(budget.md). An order of 200 takes about three to five runs (60 firms researched and verified per run
+by default) and about $10. Each run
 picks up where the last stopped (step 6), so the order is delivered within its 48 hours without
 anyone watching. An unattended run never asks: it delivers only a List that reached its target and
 passed the final pass.
@@ -148,8 +163,8 @@ passed the final pass.
 ## Output
 
 Display: inline — per order: its number, customer and project, the List against the target, this
-run's added (catalog and new), people filed, signals reused and filed, rejected with the top reasons,
-emails verified, and whether it was delivered and the email queued, or what is next and when it is
+run's added (catalog and new, light path), people filed, signals reused and filed, rejected with the
+top reasons, emails verified, the order's spend against its caps, and whether it was delivered and the email queued, or what is next and when it is
 due. One `show_results` card for the order (`get_order`). A scheduled run with nothing to do says
 only "No orders waiting".
 
