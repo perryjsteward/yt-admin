@@ -71,13 +71,13 @@ firm, published after a clean dry run. None of them creates a tag, changes a
 Yellowtail's research log and ends with a report that is the whole record. Run by hand, they show
 cards like everything else.
 
-**An order run is the fifth** (Perry, 15 Nov 2026). `/yt-admin:fulfil-orders --deliver` (hourly, or
-when the user passes it) files without a card only what its verifier passed for the order: new
-investor firms and their people, on a clean `file_investor` dry run with existing tags and a profile
-note whose first line is `Auto-filed by /fulfil-orders, unreviewed`; empty fields on catalog firms
-(never a `verified` value); at most one firm signal and one person signal per firm, after a clean
-dry run and only when none from the last six months is on file; the firms on the order's List,
-each with its note; and the delivery that emails the customer. No other skill files without a card.
+**An order's review sheet is the fifth** (Perry, 15 Nov 2026). `/yt-admin:fulfil-orders` researches
+into a spreadsheet and writes nothing to the catalog; a person marks each row approve, drop or hold
+and edits what is wrong, and that marked sheet is the approval. `--upload` (or a scheduled run once
+the sheet's Summary says `Ready to upload: yes`) then files only the approved rows, as the reviewer
+left them, each on a clean dry run: firms and their people, empty fields on catalog firms (never a
+`verified` value), the approved signals, the firms on the order's List with their notes, and the
+delivery that emails the customer. No other skill files without a card.
 
 ## 3. Yellowtail first, web second
 

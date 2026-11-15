@@ -17,7 +17,7 @@ Answer the question asked from the sections below, naming the command. With no q
 
 | Ask for | Command |
 | --- | --- |
-| Work the order queue: research, triple-check and deliver each paid project's List of 200+, every firm with 2-3 people, signals and a note on why | `/fulfil-orders` |
+| Work the order queue: research and triple-check each paid project's 200+ investors into a review spreadsheet; after a person approves it, `--upload` fills the List and delivers | `/fulfil-orders` |
 | Access requests from the site: approve Raise (project + guest invite) or software (join invite), mark contacted, decline | `/requests` |
 | Invite a founder you met to make a free account, after checking the catalog fits them | `/invite-founder` |
 | Turn event notes, posts, transcripts or a CSV into reviewed signals and firms; import a list of investors | `/signals intake` |
@@ -41,7 +41,7 @@ Yellowtail and records what it checked, so tomorrow starts where today stopped.
 
 | When | Run | Does |
 | --- | --- | --- |
-| hourly | `/yt-admin:fulfil-orders --deliver` | builds and delivers each open order's List of 200 |
+| hourly | `/yt-admin:fulfil-orders --deliver` | researches each open order into its review sheet; uploads and delivers once the sheet says Ready to upload |
 | 06:00 | `/yt-admin:prospecting --unattended` | new investor firms and their people for the next five paying projects |
 | 07:00 | `/yt-admin:lead-enrichment --unattended` | websites, LinkedIns, emails and phones for the next 25 firms and 25 people |
 | 08:00 | `/yt-admin:signals scan --unattended` | the next 50 investors scanned, 1–2 signals each published |

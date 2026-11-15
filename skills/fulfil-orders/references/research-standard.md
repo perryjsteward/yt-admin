@@ -180,6 +180,7 @@ A run keeps its dossiers in a working folder, so a long order survives a session
 next run picks up where this one stopped: `order-<number>/` in the scratchpad or working
 directory, with `profile.md` (§1), `pool.csv` (every candidate, its source and status:
 `pool`, `researching`, `verified`, `rejected: <reason>`, `on list`) and one
-`firms/<slug>.md` dossier per firm in the shape `verification.md` gives. Yellowtail is the record
-that lasts: what is on the List is done, and each run's research check (`SKILL.md` step 11)
-lists the firms it rejected and why, so a later run on a fresh machine skips them.
+`firms/<slug>.md` dossier per firm in the shape `verification.md` gives, and the **review sheet**
+(`review-sheet.md`), which is what a person checks before anything reaches Yellowtail. The records
+that last beyond this machine are the Google Sheet copy and each run's research check (`SKILL.md`
+step 10), which lists the firms it rejected and why, so a later run on a fresh machine skips them.

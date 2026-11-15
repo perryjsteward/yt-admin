@@ -63,7 +63,7 @@ say in the run's report that the model could not be chosen, since the order will
 ## Keeping count
 
 Each run counts its searches, firms researched, firms verified and spot-checks, adds them to what
-earlier runs recorded (the research check's `details.spend` for this order, `SKILL.md` step 11), and
+earlier runs recorded (the research check's `details.spend` for this order, `SKILL.md` step 10), and
 writes the new totals back: `{ searches, researched, verified, spotChecks, runs }`. A run that would
 pass a cap stops at it. At a cap with the List short, it does not deliver: the desk note says how far
 it got and that the order's budget is spent, so a person decides whether to spend more.

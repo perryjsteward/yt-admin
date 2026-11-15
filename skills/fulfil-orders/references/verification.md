@@ -77,7 +77,7 @@ Result: PASS after fix
 ## Deciding
 
 - **PASS**, or **FIX** whose fixes the researcher applied and the verifier re-checked: the firm
-  goes on (`SKILL.md` steps 8–10).
+  goes into the review sheet (`SKILL.md` step 9).
 - **FAIL**: rejected, with the reason, in `pool.csv` and the run's research check. A firm rejected
   for being dead or off-thesis is a catalog question too: say so in the run's report, so the desk
   can review it in `/catalog-hygiene` (never delete or untag it here).

@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.6.0 (15 Nov 2026)
+
+- **Orders go through a review spreadsheet before Yellowtail** (Perry, 15 Nov 2026: "so a human can
+  check before uploading"). The research runs (steps 1–10) write nothing to the catalog or the List:
+  each batch that passes verification goes into the order's review sheet,
+  `order-<number>/review-<number>.xlsx`, and a Google Sheet copy when Google Drive is connected, with
+  Summary, Firms, People, Signals and Rejected tabs. A person marks each row approve, drop or hold and
+  edits what is wrong (notes, primary contacts, details). `--upload` (steps U1–U7), or a scheduled run
+  once Summary says `Ready to upload: yes`, files only the approved rows as the reviewer left them,
+  makes and fills the List with each firm's note, and delivers. New reference
+  `skills/fulfil-orders/references/review-sheet.md`.
+- Firms an order files are noted `Reviewed by … for order #N`, not auto-filed, so `/catalog-hygiene`
+  no longer lists them as unreviewed.
+- House rules §2 (synced to `yt` 0.12.3 and `yt-raise` 0.15.3): the fifth exception is now the
+  reviewed sheet, not an unattended run.
+
 ## 0.5.1 (15 Nov 2026)
 
 - **An order costs about $10 of model spend** (Perry, 15 Nov 2026), in the new
